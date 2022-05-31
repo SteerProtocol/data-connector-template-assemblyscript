@@ -1,35 +1,35 @@
-import {UniswapSwap} from "./types/Uniswap";
-import {
-    timeSeries,
-    window,
-    duration,
-    last,
-    min,
-    max,
-    first,
-    Index,
-} from 'pondjs'
-import {TimeAlignment} from 'pondjs/lib/types'
+// import {UniswapSwap} from "./types/Uniswap";
+// import {
+//     timeSeries,
+//     window,
+//     duration,
+//     last,
+//     min,
+//     max,
+//     first,
+//     Index,
+// } from 'pondjs'
+// import {TimeAlignment} from 'pondjs/lib/types'
 
 export class Uniswapv3Subgraph {
 
     public epochTimestamp: i32; 
 
     // Defaults
-    private page = 0;
-    private limit = 1000;
-    private skip = 0;
+    private page: i32 = 0;
+    private limit: i32 = 1000;
+    private skip: i32 = 0;
 
     // Variables delivered from the node at epoch runtime
     constructor(epochTimestamp: i32) {
         this.epochTimestamp = epochTimestamp;
     }
 
-    // GetSwaps persistant variables
-    private GetSwaps_beginingDate: i32;
-    private GetSwaps_endDate: i32;
-    private GetSwaps_poolAddress: string;
-    public GetSwaps_data: Array<UniswapSwap> = [];
+    // // GetSwaps persistant variables
+    // private GetSwaps_beginingDate: i32;
+    // private GetSwaps_endDate: i32;
+    // private GetSwaps_poolAddress: string;
+    // public GetSwaps_data: Array<UniswapSwap> = [];
 
     public GetSwaps(response: string | null, callConfig: JSON): [boolean, string] {
 
@@ -139,73 +139,72 @@ export class Uniswapv3Subgraph {
         }
     }
 
-    public getGetSwapData(): Array<UniswapSwap> {
-        // Wipe the data so if there is another call for swap data it will be fresh
-        const temp = this.GetSwaps_data;
-        this.GetSwaps_data = [];
-        return temp;
+    // public getGetSwapData(): Array<UniswapSwap> {
+    //     // Wipe the data so if there is another call for swap data it will be fresh
+    //     const temp = this.GetSwaps_data;
+    //     this.GetSwaps_data = [];
+    //     return temp;
+    // }
+
+    // public TransformSwapsToCandles(swaps: Array<UniswapSwap>, config: JSON): string {
+    //     const swapData = swaps.map((d: any) => {
+    //         return {
+    //             index: d.timeStamp * 1000,
+    //             value: Math.pow(1.0001,d.tick).toFixed(8),
+    //         }
+    //     });
+    //     const series = timeSeries({
+    //         name: 'swaps',
+    //         columns: [...Object.keys(swapData[0])],
+    //         points: swapData.map((point: any) => {
+    //             return [...Object.values(point)].map(value => Number(value))
+    //             }),
+    //         })
+        
+    //         const windowRollup = series
+    //         .fixedWindowRollup({
+    //         window: window(duration(config.candleWidth * 1000)),
+    //         aggregation: {
+    //             high: ['value', max()],
+    //             low: ['value', min()],
+    //             close: ['value', last()],
+    //             open: ['value', first()],
+    //         },
+    //         })
+    //         .fill({
+    //         fieldSpec: 'value',
+    //         method: 2,
+    //         })
+        
+    //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //       // @ts-ignore
+    //         const transformed = windowRollup
+    //         .toJSON()
+    //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //       // @ts-ignore
+    //         .points.map((p: any) => {
+    //         // Convert time range to timestamp of beginning of range
+    //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //         // @ts-ignore
+    //         p[0] = new Index(p[0])
+    //         .toTimeRange()
+    //         .toTime(TimeAlignment.Begin)
+    //         .toDate()
+    //         .getTime()
+    //         return p
+    //         })
+    //         .map((p: any) => {
+    //         return {
+    //             timestamp: p[0],
+    //             high: p[1],
+    //             low: p[2],
+    //             close: p[3],
+    //             open: p[4],
+    //         }
+    //         })
+        
+    //     return JSON.stringify(transformed);
+    //     }
+        
     }
 
-    public TransformSwapsToCandles(swaps: Array<UniswapSwap>, config: JSON): string {
-        const swapData = swaps.map((d: any) => {
-            return {
-                index: d.timeStamp * 1000,
-                value: Math.pow(1.0001,d.tick).toFixed(8),
-            }
-        });
-        const series = timeSeries({
-            name: 'swaps',
-            columns: [...Object.keys(swapData[0])],
-            points: swapData.map((point: any) => {
-                return [...Object.values(point)].map(value => Number(value))
-                }),
-            })
-        
-            const windowRollup = series
-            .fixedWindowRollup({
-            window: window(duration(config.candleWidth * 1000)),
-            aggregation: {
-                high: ['value', max()],
-                low: ['value', min()],
-                close: ['value', last()],
-                open: ['value', first()],
-            },
-            })
-            .fill({
-            fieldSpec: 'value',
-            method: 2,
-            })
-        
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-            const transformed = windowRollup
-            .toJSON()
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-            .points.map((p: any) => {
-            // Convert time range to timestamp of beginning of range
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            p[0] = new Index(p[0])
-            .toTimeRange()
-            .toTime(TimeAlignment.Begin)
-            .toDate()
-            .getTime()
-            return p
-            })
-            .map((p: any) => {
-            return {
-                timestamp: p[0],
-                high: p[1],
-                low: p[2],
-                close: p[3],
-                open: p[4],
-            }
-            })
-        
-        return JSON.stringify(transformed);
-        }
-        
-    }
-
-}
