@@ -35,7 +35,7 @@ describe("WASM Transformation Module", () => {
       );
     });
     
-    test("be initialized", async () => {
+    test.only("be initialized", async () => {
       let configMemoryRef = myModule.__pin(
         myModule.__newString(
           config

@@ -1,115 +1,83 @@
 import { JSON } from "assemblyscript-json";
+// import { Obj } from "assemblyscript-json/assembly/JSON";
 // import {UniswapSwap} from "./types/Uniswap";
-import {Uniswapv3Subgraph} from "./Uniswapv3Subgraph";
-import {HttpHandler} from "./HttpHandler";
-// import { CustomStrategy } from "./CustomStrategy";
+// import {Uniswapv3Subgraph} from "./Uniswapv3Subgraph";
 
-// export class DataConfig {
-//   constructor(public calls: Array<DataCall>){}
-// }
 
-// export class DataCall  {
-//     name: string;
-//     params: string;
-//     transform: DataTransform;
-// }
-
-// class DataTransform {
-//   type: string;
-//   params: string;
-// }
 
 // The class designed for a certain number of data sources
 export class DataConnector {
 
-  public uniswapHandler: Uniswapv3Subgraph;
-  public config: Array<JSON.Value>;
-  public callsLength: i32;
-  private index: number = 0;
+  // public uniswapHandler: Uniswapv3Subgraph;
+  public config: string;
+  // Anything to get that MVP
+  // private supportedFunctions: Array<string> = ["UniswapSwapData"];
 
   // public _config: Array<Map<string,string>> = [];
 
-  public TransformedData: Array<string> = [];
+  public TransformedData: string;
 
   // I'd imagine this input would be standardized something like this, any config and then state info necessary for getting the data
   constructor(config: string, epochTimestamp: string) {
 
-    this.uniswapHandler = new Uniswapv3Subgraph(i32(parseInt(epochTimestamp)));
-
-    // Parse the config
-    const configObj = <JSON.Obj>JSON.parse(config);
-
-    const temp = configObj.getValue("calls");
-    if (temp != null){
-      const notNull = <JSON.Value>temp;
-      if (notNull.isArr){
-        const pArr = <JSON.Arr>notNull;
-        const pVArr = pArr._arr;
-        this.config = pVArr;
-        this.callsLength = pVArr.length;
-      }
-      else {this.config = [];}
-    }
-    else {this.config = [];}
+    // this.uniswapHandler = new Uniswapv3Subgraph(i32(parseInt(epochTimestamp)));
+    this.config = config;
   }
 
-  public getConfig(): string {
-    const response = HttpHandler.MakeRequest("http://localhost:3000/api/v1/config");
-    return response;
-  }
+  // To be called back until the second string is results,
+  // which will return the transformed data after performing all the calls
+  // Either the response to the request is sent, or null
+  public main<T>(response: T): Array<string> {
 
-  // To be called back until the boolean returns true.
-  // After getting each call from the string, the response is passed in
-  public main<T>(response: T): [string, string] {
+    // //Get the function name if it exists
+    // const config = <JSON.Obj>JSON.parse(this.config);
+    // const functionToCall = config.getValue("name");
+    // // Null handling
+    // if (functionToCall == null) {
+    //   throw new Error("No function name provided");
+    // }
+    // const functionName = functionToCall.toString();
+    // // https://www.assemblyscript.org/runtime.html#memory-layout <
+    // if (this.supportedFunctions.includes(functionName) == false) {
+    //   throw new Error("Function not found");
+    // }
+    return ["", "functionName"];
+  } 
 
-    const config = JSON.parse(this.config);
-    // See if we are done with callbacks
-    if ( config.get("calls").length  == this.index) {
-      return [true, null];
-    }
+  // All Data functions should return two strings, the first being the request payload,
+  // and the second being the callback function to pass off the response too.
+  // public SwapData<T>(response: T): [string, string] {
+  //   const config = <JSON.Obj>JSON.parse(this.config);
+  //   // Get the params we know we need
+  //   const poolAddress = config.getString("poolAddress");
+  //   const period = config.getInteger("period");
+  //   // Null handling
+  //   if (poolAddress == null || period == null) {
+  //     throw new Error("Invalid parameters");
+  //   }
+  //   // Send off the response along with the configs, expect a bool and the callback function
+  //   const swapsResult = this.uniswapHandler.getUniswapSwap(response, poolAddress.toString(), i32(period));
 
-    // Loop through the calls in config and see if they are supported in this bundle, if so call them
-    const CallName = config.calls[this.index].name;
+  //   // if swapsResult is false, then recall this, else call the transformer
+  //   if (swapsResult[0] == false) {
+  //     return [swapsResult[1], "SwapData"];
+  //   }
+  //   else {
+  //     // Signal callback to transform
+  //     return ["", "transform"];
+  //   }
+    
+  // }
 
-    // Pass in the response from the previous call, if the helper gives a true then we can increment the index and call the next call
-    if (CallName == "UniswapSwapData") {
-      // Process response
-      const swapResult = this.uniswapHandler['GetSwaps'](response.toString(), this.config.calls[this.index].params);
-      // See if this call is done, continue to next if so
-      if (swapResult[0]) {
-        // Transform the data
-        if (this.config.calls[this.index].transform.type == "candle") {
-          // Pass in the data to the candle transformer, append to the transformed data
-          const candles = this.uniswapHandler.TransformSwapsToCandles(this.uniswapHandler.getGetSwapData(), this.config.calls[this.index].transform.params);
-          this.TransformedData.push(candles);
-        }
-        else if (this.config.calls[this.index].transform.type == "custom") {
-          // @Note additional transformations can be added like this
-        }
-        else {throw new Error("Invalid transformation type");}
-        this.index++;
-        return [false, null];
-      }
-      else {
-        // @TODO Maybe add empty slot to the transformed data array?
-        return [false, swapResult[1]];
-      }
-    }
-    // Future data collections would be added here
-    else if (CallName == "OtherUniswapData") {
-      // @Note this is an example of how to add a new call, which is defined in the helper class
-    }
-    // If the call is not supported, we can move onto the next call
-    else {
-      this.index++;
-      return [false, null];
-    }
+  public transform(): Array<string> {
+    return ["", "results"];
   }
 
   // To be called after the main function returns true, to get all data
-  public results(): Array<string> {
-    return this.TransformedData;
-  }
+  // public results(): string {
+  //   this.TransformedData = this.uniswapHandler.data.toString()
+  //   return this.TransformedData;
+  // }
 
   // An array of function to be called, the parameters to be passed, the transformation type, and the transformation parameters
   static exampleInputConfig(): string {
@@ -126,35 +94,69 @@ export class DataConnector {
   // by the frontend to display input value options and validate user input.
   static config(): string {
     return `{
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Uniswapv3 Subgraph Data Connector",
       "type": "object",
-      "functionOptions": [
-        {
-          "name": "UniswapSwapData",
-          "params": [
-            {
-              "name": "poolAddress",
-              "type": "string",
-              "description": "The address of the Uniswap pool to get data from"
-            },
-            {
-              "name": "period",
-              "type": "number",
-              "description": "The period of time to get data from epoch time"
-            },
+      "properties": {
+        "function": {
+          "enum": [
+            "SwapData",
+            "Other"
           ]
-          "transformOptions": [
-            {
-              "name": "candle",
-              "params": [
-                {
-                  "name": "candleWidth",
-                  "type": "number",
-                  "description": "The width of the candle in seconds"
-                }
-              ]
+        },
+        "transformation": {
+          "enum": [
+            "candle",
+            "raw"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "function": {
+                "const": "SwapData"
+              }
             }
+          },
+          "then": {
+            "properties": {
+              "poolAddress": {
+                "type": "string",
+                "description":"The pool address to pull the swaps from"
+              },
+              "period": {
+                "type": "number",
+                "description": "The time in seconds to go back and pull data from"
+              }
+            },
+            "required": [
+              "poolAddress", "period"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "transformation": {
+                "const": "candle"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "candleSize": {
+                "type": "number",
+                "description":"The size of the candles in seconds"
+              }
+            },
+            "required": [
+              "candleSize"
+            ]
+          }
+        },
+        {
+          "required": [
+            "function", "transformation"
           ]
         }
       ]
