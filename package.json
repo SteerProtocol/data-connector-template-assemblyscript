@@ -34,7 +34,7 @@
     "@babel/preset-env": "^7.14.8",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.11.11",
-    "assemblyscript": "^0.20.7",
+    "assemblyscript": "^0.19.9",
     "babel-core": "^6.26.3",
     "babel-jest": "^27.0.6",
     "cz-conventional-changelog": "3.3.0",
