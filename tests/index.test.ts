@@ -5,13 +5,13 @@ const myModule = require("../untouchLoader");
 
 describe("WASM Transformation Module", () => {
   describe("Uniswap Data", () => {
-    test("can return example", async () => {
+    test.only("can return example", async () => {
       // Call the config function on the transformation bundle
-      const result = myModule.DataConnector.exampleconfig();
+      const result = myModule.DataConnector.exampleInputConfig();
       // console.log(myModule.__getString(result));
       // Pull the result from memory and parse the result
-      const parsedResult = JSON.parse(myModule.__getString(result));
-      // console.log(parsedResult);
+      const parsedResult = (myModule.__getString(result));
+      console.log(parsedResult);
       // The result should match the given config
       expect(parsedResult).toStrictEqual(
         JSON.parse(`{
@@ -35,7 +35,7 @@ describe("WASM Transformation Module", () => {
       );
     });
     
-    test.only("be initialized", async () => {
+    test("be initialized", async () => {
       let configMemoryRef = myModule.__pin(
         myModule.__newString(
           config
@@ -49,7 +49,7 @@ describe("WASM Transformation Module", () => {
 
       // The actual strategy instantiation and execution
       const dataConnector = myModule.DataConnector(configMemoryRef, timestampMemoryRef);
-      const parsedConfRef = dataConnector.getConfig();
+      const parsedConfRef = dataConnector.config();
       console.log(parsedConfRef);
       const parsedConf = (myModule.__getString(parsedConfRef));
       console.log(parsedConf);

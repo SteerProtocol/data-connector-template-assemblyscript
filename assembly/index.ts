@@ -11,7 +11,7 @@ export class DataConnector {
   public uniswapHandler: Uniswapv3Subgraph;
   public config: string;
   // Anything to get that MVP
-  private supportedFunctions: Array<string> = ["UniswapSwapData"];
+  private supportedFunctions: Array<string> = ["SwapData"];
 
   // public _config: Array<Map<string,string>> = [];
 
@@ -27,7 +27,7 @@ export class DataConnector {
   // To be called back until the second string is results,
   // which will return the transformed data after performing all the calls
   // Either the response to the request is sent, or null
-  public main<T>(response: T): Array<string> {
+  public main(): string {
 
     //Get the function name if it exists
     const config = <JSON.Obj>JSON.parse(this.config);
@@ -37,16 +37,17 @@ export class DataConnector {
       throw new Error("No function name provided");
     }
     const functionName = functionToCall.toString();
+
     // https://www.assemblyscript.org/runtime.html#memory-layout <
     if (this.supportedFunctions.includes(functionName) == false) {
       throw new Error("Function not found");
     }
-    return ["", "functionName"];
+    return ["", functionName].toString();
   } 
 
   // All Data functions should return two strings, the first being the request payload,
   // and the second being the callback function to pass off the response too.
-  public SwapData<T>(response: T): Array<string> {
+  public SwapData(response: string): string {
     const config = <JSON.Obj>JSON.parse(this.config);
     // Get the params we know we need
     const poolAddress = config.getString("poolAddress");
@@ -56,15 +57,15 @@ export class DataConnector {
       throw new Error("Invalid parameters");
     }
     // Send off the response along with the configs, expect a bool and the callback function
-    const swapsResult = this.uniswapHandler.getUniswapSwap(response, poolAddress.toString(), i32(period));
+    const swapsResult = this.uniswapHandler.getUniswapSwap(response, poolAddress.toString(), i32(period._num));
 
     // if swapsResult is false, then recall this, else call the transformer
-    if (swapsResult[0] != "true") {
-      return [swapsResult[1], "SwapData"];
+    if (swapsResult != "true") {
+      return [swapsResult, "SwapData"].toString();
     }
     else {
       // Signal callback to transform
-      return ["", "transform"];
+      return ["", "transform"].toString();
     }
     
   }
@@ -79,13 +80,13 @@ export class DataConnector {
   }
 
   // An array of function to be called, the parameters to be passed, the transformation type, and the transformation parameters
-  static exampleInputConfig(): string {
+  public exampleInputConfig(): string {
     return `{
       "name": "UniswapSwapData",
       "poolAddress": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
       "period": 604800,
       "transform": "candle",
-      "candleWidth": 14400,
+      "candleWidth": 14400
     }`
   }
 

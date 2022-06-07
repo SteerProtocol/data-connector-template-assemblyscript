@@ -21,29 +21,25 @@ export class Uniswapv3Subgraph {
     private GetSwaps_beginingDate: i32;
     // public GetSwaps_data: Array<UniswapSwap> = [];
 
-    public getUniswapSwap<T>(response: T, poolAddress: string, period: i32): Array<string> {
-
-        if (response == null) { // Presumably the first call, initialize the variables
+    public getUniswapSwap(response: string, poolAddress: string, period: i32): string {
+        
+        if (response == '') { // Presumably the first call, initialize the variables
             this.GetSwaps_beginingDate = this.epochTimestamp - period;
+            return this.GetSwaps_beginingDate.toString();
             // this.GetSwaps_endDate = this.epochTimestamp;
             // this.GetSwaps_poolAddress = callConfig.poolAddress;
-            return ["false", `{
-                "name": "Uniswapv3 Subgraph",
+            return `{
                 "method": "post",
-                "url": {
-                    "enpoint": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
-                    "variables": {}
-                }
-                "headers": {}
-                "payload": {
-                    "params": {},
-                    "graphql": {
-                    "query": 
-                    "query getSwaps(address: ${poolAddress}, startDate: ${this.GetSwaps_beginingDate.toString()}, endDate: ${this.epochTimestamp.toString()}, limit: ${this.limit.toString()}, skip: 0){
-                        swaps(first: ${this.limit.toString()}, skip: 0, where: {
-                            timestamp_gt: ${this.GetSwaps_beginingDate.toString()}
-                            timestamp_lt: ${this.epochTimestamp.toString()}
-                            pool: ${poolAddress}
+                "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+                "headers": {},
+                "data": {
+                    "variables": {},
+                    "operationName": "getSwaps",
+                    "query": "query getSwaps(address: `+ poolAddress+`, startDate: `+this.GetSwaps_beginingDate.toString() + `, endDate: `+ this.epochTimestamp.toString()+`, limit: `+this.limit.toString()+ `, skip: 0){
+                        swaps(first:`+ this.limit.toString() + `, skip: 0, where: {
+                            timestamp_gt: `+this.GetSwaps_beginingDate.toString()+`
+                            timestamp_lt: `+this.epochTimestamp.toString()+`
+                            pool: `+poolAddress+`
                             }, orderBy: timestamp, orderDirection: asc){
                             id
                             timestamp
@@ -58,13 +54,9 @@ export class Uniswapv3Subgraph {
                             }
                         }
                     }",
-                    "variables": {}
                     }
-                    "variables": {}
                 }
-            }`
-                
-            ];
+            }`;
         }
 
         else {
@@ -83,7 +75,7 @@ export class Uniswapv3Subgraph {
                 // Here if we have updated to the point where there is no more data to return,
                 // we return true to indicate that we are done. This means there is an extra superfluous 
                 // call that does nothing but confirm we are done.
-                return ["true", ""];
+                return "true";
             }
             else {
                 //Here we add our data, and update the beginingDate
@@ -92,20 +84,15 @@ export class Uniswapv3Subgraph {
                 const last_swap = <JSON.Obj>this.data[this.data.length - 1];
                 const timestamp = last_swap.getNum("timestamp");
                 if (timestamp == null) {throw new Error("No timestamp in last swap");}
-                this.GetSwaps_beginingDate = timestamp._num + 1;
-                return ["false", `{
-                    "name": "Uniswapv3 Subgraph",
+                this.GetSwaps_beginingDate = i32(timestamp._num + 1);
+                return `{
                     "method": "post",
-                    "url": {
-                        "enpoint": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
-                        "variables": {}
-                    }
-                    "headers": {}
-                    "payload": {
-                        "params": {},
-                        "graphql": {
-                        "query": 
-                        "query getSwaps(address: ${poolAddress}, startDate: ${this.GetSwaps_beginingDate.toString()}, endDate: ${this.epochTimestamp.toString()}, limit: ${this.limit.toString()}, skip: 0){
+                    "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+                    "headers": {},
+                    "data": {
+                        "variables": {},
+                        "operationName": "getSwaps",
+                        "query": "query getSwaps(address: ${poolAddress}, startDate: ${this.GetSwaps_beginingDate.toString()}, endDate: ${this.epochTimestamp.toString()}, limit: ${this.limit.toString()}, skip: 0){
                             swaps(first: ${this.limit.toString()}, skip: 0, where: {
                                 timestamp_gt: ${this.GetSwaps_beginingDate.toString()}
                                 timestamp_lt: ${this.epochTimestamp.toString()}
@@ -124,11 +111,9 @@ export class Uniswapv3Subgraph {
                                 }
                             }
                         }",
-                        "variables": {}
                         }
-                        "variables": {}
                     }
-                }`]
+                }`
             }
         }
     }
