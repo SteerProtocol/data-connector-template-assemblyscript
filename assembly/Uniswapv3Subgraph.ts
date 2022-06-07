@@ -25,7 +25,7 @@ export class Uniswapv3Subgraph {
         
         if (response == '') { // Presumably the first call, initialize the variables
             this.GetSwaps_beginingDate = this.epochTimestamp - period;
-            return this.GetSwaps_beginingDate.toString();
+            // return this.GetSwaps_beginingDate.toString();
             // this.GetSwaps_endDate = this.epochTimestamp;
             // this.GetSwaps_poolAddress = callConfig.poolAddress;
             return `{
@@ -33,30 +33,9 @@ export class Uniswapv3Subgraph {
                 "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
                 "headers": {},
                 "data": {
-                    "variables": {},
-                    "operationName": "getSwaps",
-                    "query": "query getSwaps(address: `+ poolAddress+`, startDate: `+this.GetSwaps_beginingDate.toString() + `, endDate: `+ this.epochTimestamp.toString()+`, limit: `+this.limit.toString()+ `, skip: 0){
-                        swaps(first:`+ this.limit.toString() + `, skip: 0, where: {
-                            timestamp_gt: `+this.GetSwaps_beginingDate.toString()+`
-                            timestamp_lt: `+this.epochTimestamp.toString()+`
-                            pool: `+poolAddress+`
-                            }, orderBy: timestamp, orderDirection: asc){
-                            id
-                            timestamp
-                            amount0
-                            amount1
-                            transaction {
-                                id
-                                blockNumber
-                            }
-                            tick
-                            sqrtPriceX96
-                            }
-                        }
-                    }",
+                    "query": "{ swaps (first:`+this.limit.toString()+` , skip: 0, where: {timestamp_gt: `+ this.GetSwaps_beginingDate.toString()+`, timestamp_lt: `+this.epochTimestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
                     }
-                }
-            }`;
+                }`;
         }
 
         else {
@@ -90,30 +69,9 @@ export class Uniswapv3Subgraph {
                     "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
                     "headers": {},
                     "data": {
-                        "variables": {},
-                        "operationName": "getSwaps",
-                        "query": "query getSwaps(address: ${poolAddress}, startDate: ${this.GetSwaps_beginingDate.toString()}, endDate: ${this.epochTimestamp.toString()}, limit: ${this.limit.toString()}, skip: 0){
-                            swaps(first: ${this.limit.toString()}, skip: 0, where: {
-                                timestamp_gt: ${this.GetSwaps_beginingDate.toString()}
-                                timestamp_lt: ${this.epochTimestamp.toString()}
-                                pool: ${poolAddress}
-                                }, orderBy: timestamp, orderDirection: asc){
-                                id
-                                timestamp
-                                amount0
-                                amount1
-                                transaction {
-                                    id
-                                    blockNumber
-                                }
-                                tick
-                                sqrtPriceX96
-                                }
-                            }
-                        }",
+                        "query": "{ swaps (first:`+this.limit.toString()+` , skip: 0, where: {timestamp_gt: `+ this.GetSwaps_beginingDate.toString()+`, timestamp_lt: `+this.epochTimestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
                         }
-                    }
-                }`
+                    }`
             }
         }
     }
