@@ -82,7 +82,7 @@ export class DataConnector {
   // An array of function to be called, the parameters to be passed, the transformation type, and the transformation parameters
   public exampleInputConfig(): string {
     return `{
-      "name": "UniswapSwapData",
+      "name": "SwapData",
       "poolAddress": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
       "period": 604800,
       "transform": "candle",
