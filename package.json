@@ -7,7 +7,7 @@
     "test": "yarn jest",
     "asbuild:untouched": "asc assembly/index.ts --target debug --exportRuntime --transform as-bind",
     "asbuild:optimized": "asc assembly/index.ts --target release --exportRuntime --transform as-bind",
-    "asbuild:big": "asc assembly/index.ts --target debug --exportRuntime --transform as-bind --initialMemory 4096",
+    "asbuild:big": "asc assembly/index.ts --target debug --exportRuntime --transform as-bind --initialMemory 8192 --exportRuntime",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "docs": "typedoc --tsconfig ./tsconfig.json",
     "strategy": "yarn asbuild && yarn test",

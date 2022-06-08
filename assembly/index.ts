@@ -10,16 +10,18 @@ export class DataConnector {
 
   public uniswapHandler: Uniswapv3Subgraph;
   public config: string;
+  public timestamp: i32;
   // Anything to get that MVP
-  private supportedFunctions: Array<string> = ["SwapData"];
+  private supportedFunctions: StaticArray<string> = ["SwapData"];
 
-  // public _config: Array<Map<string,string>> = [];
+  public _config: Array<Map<string,string>> = [];
+  public data: Array<string> = [];
 
   // public TransformedData: string;
 
   // I'd imagine this input would be standardized something like this, any config and then state info necessary for getting the data
   constructor(config: string, epochTimestamp: string) {
-
+    // this.timestamp = i32(epochTimestamp);
     this.uniswapHandler = new Uniswapv3Subgraph(i32(parseInt(epochTimestamp)));
     this.config = config;
   }
@@ -27,38 +29,42 @@ export class DataConnector {
   // To be called back until the second string is results,
   // which will return the transformed data after performing all the calls
   // Either the response to the request is sent, or null
-  public main(): string {
+  public main(_config: string, _timestamp: i32): string {
 
     //Get the function name if it exists
-    const config = <JSON.Obj>JSON.parse(this.config);
-    const functionToCall = config.getValue("name");
+    const config = <JSON.Obj>JSON.parse(_config);
+    const functionToCall = config.getString("name");
+    const period = config.getInteger("period");
     // Null handling
-    if (functionToCall == null) {
-      throw new Error("No function name provided");
+    if (period == null || functionToCall == null) {
+      throw new Error("Incorrect config");
     }
     const functionName = functionToCall.toString();
 
-    // https://www.assemblyscript.org/runtime.html#memory-layout <
-    if (this.supportedFunctions.includes(functionName) == false) {
-      throw new Error("Function not found");
-    }
-    return ["", functionName].toString();
+    // // https://www.assemblyscript.org/runtime.html#memory-layout <
+    // if (this.supportedFunctions.includes(functionName) == false) {
+    //   throw new Error("Function not found");
+    // }
+    return functionName;
   } 
 
   // All Data functions should return two strings, the first being the request payload,
   // and the second being the callback function to pass off the response too.
   public SwapData(response: string): string {
+    // return __data_end.toString() + " " + __heap_base.toString() + " " + memory.size().toString();
     const config = <JSON.Obj>JSON.parse(this.config);
     // Get the params we know we need
     const poolAddress = config.getString("poolAddress");
     const period = config.getInteger("period");
+    
     // Null handling
     if (poolAddress == null || period == null) {
       throw new Error("Invalid parameters");
     }
+    
     // Send off the response along with the configs, expect a bool and the callback function
     const swapsResult = this.uniswapHandler.getUniswapSwap(response, poolAddress.toString(), i32(period._num));
-
+    
     // if swapsResult is false, then recall this, else call the transformer
     if (swapsResult != "true") {
       return [swapsResult, "SwapData"].toString();
@@ -74,10 +80,10 @@ export class DataConnector {
     return ["", "results"];
   }
 
-  // To be called after the main function returns true, to get all data
-  public results(): string {
-    return this.uniswapHandler.data.toString()
-  }
+  // // To be called after the main function returns true, to get all data
+  // public results(): string {
+  //   return this.uniswapHandler.data.toString()
+  // }
 
   // An array of function to be called, the parameters to be passed, the transformation type, and the transformation parameters
   public exampleInputConfig(): string {
