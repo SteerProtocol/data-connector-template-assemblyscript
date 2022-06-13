@@ -3,9 +3,9 @@ import * as AsBind from "as-bind/dist/as-bind.cjs.js";
 
 
 const imports = {
-  // console: { // File which you are injecting
-  //   log(strPtr) {
-  //     console.log(strPtr)
+  // index: { // File which you are injecting
+  //   stringToInt(arg0) {
+  //     return parseInt(arg0)
   //   }
   // }
 };
