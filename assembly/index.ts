@@ -1,5 +1,6 @@
 import { JSON } from "assemblyscript-json";
 
+// Local Variables
   var poolAddress: string;
   var timestamp: i64;                 // epoch timestamp/end date
   var period: i64;                    // period in seconds
@@ -33,20 +34,22 @@ import { JSON } from "assemblyscript-json";
 
     if (response == first) { // Presumably the first call
       return `{
-        "method": "post",
-        "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
-        "headers": {},
-        "data": {
-            "query": "{ swaps (first: 1000, skip: 0, where: {timestamp_gt: `+ startTime.toString()+`, timestamp_lt: `+timestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
-            }
-        }`
+"method": "post",
+"url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+"headers": {},
+"data": {
+    "query": "{ swaps (first: 1000, skip: 0, where: {timestamp_gt: `+ startTime.toString()+`, timestamp_lt: `+timestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
+    }
+}`
     }
     else{ 
       // We have a response, parse it and test condition, update iteration logic
       const new_response = <JSON.Obj>JSON.parse(response);
-      const new_data = new_response.getObj("data");
-      if (new_data == null) {throw new Error("No data in response");}
-      const new_arr = new_data.getArr("swaps");
+      // const new_data = new_response.getObj("data");
+      // if (new_data == null) {throw new Error("No data in response");}
+      const nested_response = new_response.getObj("data");
+      if (nested_response == null) {throw new Error("No data in response");}
+      const new_arr = nested_response.getArr("swaps");
       if (new_arr == null) {throw new Error("No swaps in response");}
       const new_swaps = new_arr._arr;
       // If we recieved 0 swaps, we have exhausted the remaining data, so we have completed our loop
@@ -63,13 +66,13 @@ import { JSON } from "assemblyscript-json";
         // update iteration logic, TheGraph has a skip limit of 5, so we use the start date to filter
         startTime = i32(parseInt(_timestamp._str));
         return `{
-          "method": "post",
-          "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
-          "headers": {},
-          "data": {
-              "query": "{ swaps (first: 1000, skip: 0, where: {timestamp_gt: `+ startTime.toString()+`, timestamp_lt: `+timestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
-              }
-          }`
+"method": "post",
+"url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+"headers": {},
+"data": {
+    "query": "{ swaps (first: 1000, skip: 0, where: {timestamp_gt: `+ startTime.toString()+`, timestamp_lt: `+timestamp.toString()+`, pool: \\"`+poolAddress+`\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"
+    }
+}`
       }
     }
   } 
@@ -128,7 +131,7 @@ import { JSON } from "assemblyscript-json";
     }
 
     // craft object to return
-    return "{data: [" + Candles.toString() + "]}";
+    return `{"data": [` + Candles.toString() + "]}";
   }
 
   function getCandle(data: Array<f32>): Candle {
@@ -153,7 +156,7 @@ import { JSON } from "assemblyscript-json";
   export function exampleInputConfig(): string {
     return `{
       "epochLength": "86400",
-      "poolAddress": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "poolAddress": "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
       "period": 604800,
       "candleWidth": 14400
     }`
@@ -163,38 +166,38 @@ import { JSON } from "assemblyscript-json";
   // by the frontend to display input value options and validate user input.
   export function configForm(): string {
     return `{
-      "title": "Uniswapv3 Swap To Candle Config",
-      "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
-      "type": "object",
-      "required": [
-        "candleWidth",
-        "poolAddress",
-        "period",
-        "epochLength"
-      ],
-      "properties": {
-        "epochLength": {
-          "type": "integer",
-          "title": "Epoch Length",
-          "description": "Duration in seconds of how often this bundle + strategy should run"
-        },
-        "poolAddress": {
-          "type": "string",
-          "title": "Pool Address",
-          "description": "Address of the pool to pull swaps from"
-        },
-        "period": {
-          "type": "integer",
-          "title": "Period",
-          "description": "Duration in seconds of how far back in time from the current to pull swap data for"
-        },
-        "candleWidth": {
-          "type": "integer",
-          "title": "Candle Width",
-          "description": "The size or width of each candle to make from the swap data, measured in seconds"
-        }
-      }
-    }`; 
+  "title": "Uniswapv3 Swap To Candle Config",
+  "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
+  "type": "object",
+  "required": [
+    "candleWidth",
+    "poolAddress",
+    "period",
+    "epochLength"
+  ],
+  "properties": {
+    "epochLength": {
+      "type": "integer",
+      "title": "Epoch Length",
+      "description": "Duration in seconds of how often this bundle + strategy should run"
+    },
+    "poolAddress": {
+      "type": "string",
+      "title": "Pool Address",
+      "description": "Address of the pool to pull swaps from"
+    },
+    "period": {
+      "type": "integer",
+      "title": "Period",
+      "description": "Duration in seconds of how far back in time from the current to pull swap data for"
+    },
+    "candleWidth": {
+      "type": "integer",
+      "title": "Candle Width",
+      "description": "The size or width of each candle to make from the swap data, measured in seconds"
+    }
+  }
+}`; 
   }
 
 

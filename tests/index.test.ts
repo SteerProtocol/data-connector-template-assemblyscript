@@ -1,59 +1,84 @@
-import { config } from "./utils";
+import { candles, config, configForm, firstCall, response_swaps, secondCall } from "./utils";
 
 // We use untouched so that we can run the un-optimized version of the wasm which will provide better stacktraces
 const myModule = require("../untouchLoader");
 
+function hexEncode(str: string): any {
+  var hex, i;
+
+  var result = "";
+  for (i=0; i<str.length; i++) {
+      hex = str.charCodeAt(i).toString(16);
+      result += ("000"+hex).slice(-4);
+  }
+
+  return result
+}
+
 describe("WASM Transformation Module", () => {
   describe("Uniswap Data", () => {
-    test.only("can return example", async () => {
-      // Call the config function on the transformation bundle
-      const result = myModule.DataConnector.exampleInputConfig();
-      // console.log(myModule.__getString(result));
-      // Pull the result from memory and parse the result
-      const parsedResult = (myModule.__getString(result));
-      console.log(parsedResult);
-      // The result should match the given config
-      expect(parsedResult).toStrictEqual(
-        JSON.parse(`{
-          "calls": [
-              {
-                "name": "UniswapSwapData",
-                "params": {
-                  "poolAddress": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
-                  "period": "604800"
-                },
-                "transform": {
-                  "type": "candle",
-                  "params": {
-                    "candleWidth": "28800",
-                    "numCandles": "21"
-                }
-              }
-            }
-          ]
-        }`)
-      );
-    });
-    
-    test("be initialized", async () => {
+    test("can return input config", async () => {
+      // Call the configForm function on the transformation bundle
+      const result = myModule.configForm();
+      // Check that the result is the same as the expected result
+      // Fix some funky encoding
+      let hexResult = hexEncode(result) as string;
+      hexResult = hexResult.replace(/000d/g, '');
+      const hexExpected = hexEncode(configForm);
+  expect(hexResult).toEqual(hexExpected);
+  });
+
+    test("fails imporper config", async () => {
       let configMemoryRef = myModule.__pin(
         myModule.__newString(
-          config
+          `{"config":"null"}`
         )
       );
-
-      // Here we pin the array to the WASM memory
-      let timestampMemoryRef = myModule.__pin(
-        myModule.__newString(JSON.stringify(1654012158))
-      );
-
+      const timestamp = 1654012158
       // The actual strategy instantiation and execution
-      const dataConnector = myModule.DataConnector(configMemoryRef, timestampMemoryRef);
-      const parsedConfRef = dataConnector.config();
-      console.log(parsedConfRef);
-      const parsedConf = (myModule.__getString(parsedConfRef));
-      console.log(parsedConf);
-      
+      expect(() => {
+        myModule.initialize(configMemoryRef, timestamp);
+      }).toThrowError(/Cannot parse JSON/);
     });
+
+    test("can return first axios config obj", async () => {
+      const timestamp = 1654012158
+      myModule.initialize(config, timestamp);
+      const result = myModule.main("first");
+      let hexResult = hexEncode(result) as string;
+      hexResult = hexResult.replace(/000d/g, '');
+      const hexExpected = hexEncode(firstCall);
+      expect(hexResult).toBe(hexExpected);
+    });
+
+    test("can process a response and return a new config", async () => {
+      const timestamp = 1654012158
+      myModule.initialize(config, timestamp);
+      const result = myModule.main(response_swaps);
+      let hexResult = hexEncode(result) as string;
+      hexResult = hexResult.replace(/000d/g, '');
+      const hexExpected = hexEncode(secondCall);
+      expect(hexResult).toBe(hexExpected);
+    });
+
+    test("can process the final response and return true for callback termination", async () => {
+      const timestamp = 1654012158
+      myModule.initialize(config, timestamp);
+      myModule.main(response_swaps);
+      const result = myModule.main(`{"data":{"swaps":[]}}`);
+      expect(result).toBe("true");
+    });
+
+    test("can run transformation and return candles", async () => {
+      const timestamp = 1654012158
+      myModule.initialize(config, timestamp);
+      myModule.main(response_swaps);
+      const result = myModule.transform();
+      let hexResult = hexEncode(result) as string;
+      hexResult = hexResult.replace(/000d/g, '');
+      const hexExpected = hexEncode(candles);
+      expect(hexResult).toBe(hexExpected);
+    });
+
   });
 });
