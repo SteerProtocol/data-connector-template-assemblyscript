@@ -90,8 +90,19 @@ import { JSON } from "assemblyscript-json";
         "low": ${this.low},
         "open": ${this.open},
         "close": ${this.close}
-      }`
+      },`
     }
+  }
+
+  export function getString (candles: Candle[]): string {
+    let base: string = ''
+    for (let i = 0; i < candles.length; i++) {
+      base += candles[i].toString()
+      // if (i != candles.length - 1) {
+      //   base += ', '
+      // }
+    }
+    return base.substr(0,base.length-1);
   }
 
   export function transform(): string {
@@ -131,7 +142,7 @@ import { JSON } from "assemblyscript-json";
     }
 
     // craft object to return
-    return `{"data": [` + Candles.toString() + "]}";
+    return `{"data": [` + getString(Candles) + "]}";
   }
 
   function getCandle(data: Array<f32>): Candle {
@@ -155,16 +166,15 @@ import { JSON } from "assemblyscript-json";
   // An example of what the config object will look like after being created via the configForm
   export function exampleInputConfig(): string {
     return `{
-      "epochLength": "86400",
       "poolAddress": "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
-      "period": 604800,
+      "period": 604860,
       "candleWidth": 14400
     }`
   }
 
   // Renders the config object in JSON Schema format, which is used
   // by the frontend to display input value options and validate user input.
-  export function configForm(): string {
+  export function config(): string {
     return `{
   "title": "Uniswapv3 Swap To Candle Config",
   "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
@@ -172,15 +182,9 @@ import { JSON } from "assemblyscript-json";
   "required": [
     "candleWidth",
     "poolAddress",
-    "period",
-    "epochLength"
+    "period"
   ],
   "properties": {
-    "epochLength": {
-      "type": "integer",
-      "title": "Epoch Length",
-      "description": "Duration in seconds of how often this bundle + strategy should run"
-    },
     "poolAddress": {
       "type": "string",
       "title": "Pool Address",
