@@ -7,7 +7,6 @@ import { JSON } from "assemblyscript-json";
   var startTime: i64;                 // start date
   var candleWidth: i64;
   var data: Array<JSON.Value> = [];   // collector array of swaps
-  const first: string = "first";      // saved to memory for comparison
 
 
   // Initializes variables from the config file
@@ -32,7 +31,7 @@ import { JSON } from "assemblyscript-json";
   // Ref: https://axios-http.com/docs/req_config/
   export function main(response: string): string {
 
-    if (response == first) { // Presumably the first call
+    if (response == '') { // Presumably the first call
       return `{
 "method": "post",
 "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
