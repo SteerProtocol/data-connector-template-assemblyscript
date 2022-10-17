@@ -1,26 +1,16 @@
 import { JSON } from "assemblyscript-json";
 import { BaseDataConnector } from "./baseDataConnector";
 
+// Public function for version support node-side
+// Check the releases and docs for the latest features, interfaces, and support
+export function version(): i32{
+  return BaseDataConnector.version;
+}
 
 // **WARNING** Large data objects should not be members of the class. Instance memory allocation is static and may go out of bounds. 
 var data: Array<JSON.Value> = [];   // collector array of swaps
 
-export class Candle {
-  constructor(
-    public high: f32,
-    public low: f32,
-    public open: f32,
-    public close: f32
-  ) {}
-  public toString(): string {
-    return `{
-      "high": ${this.high},
-      "low": ${this.low},
-      "open": ${this.open},
-      "close": ${this.close}
-    }`
-  }
-}
+// Class needs to be called DataConnector
 export class DataConnector extends BaseDataConnector {
 
   // Class members
@@ -202,6 +192,23 @@ export class DataConnector extends BaseDataConnector {
     }
   }
 }`; 
+  }
+}
+
+export class Candle {
+  constructor(
+    public high: f32,
+    public low: f32,
+    public open: f32,
+    public close: f32
+  ) {}
+  public toString(): string {
+    return `{
+      "high": ${this.high},
+      "low": ${this.low},
+      "open": ${this.open},
+      "close": ${this.close}
+    }`
   }
 }
 

@@ -41,6 +41,13 @@ describe("WASM Transformation Module", () => {
   expect(hexResult).toEqual(hexExpected);
   });
 
+  test("can return version", async () => {
+
+    const version = myModule.version();
+
+expect(version).toEqual(2);
+});
+
     test("can return first axios config obj", async () => {
       const timestamp = 1654012158
       let configMemoryRef = myModule.__pin(

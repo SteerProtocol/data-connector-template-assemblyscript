@@ -1,6 +1,9 @@
 
+
 // **WARNING** Large data objects should not be members of the class. Instance memory allocation is static and may go out of bounds. 
 export abstract class BaseDataConnector {
+
+    static version: i32 = 2;
 
     constructor(){}
 
@@ -20,7 +23,7 @@ export abstract class BaseDataConnector {
     }
 
     // Check the releases and docs for the latest features, interfaces, and support
-    version(): i32{
-        return 2
+    getVersion(): i32{
+        return BaseDataConnector.version;
     }
 }
