@@ -201,6 +201,10 @@ import { JSON } from "assemblyscript-json";
 }
 }
 }`; 
-  }
+}
+
+export function version(): i32 {
+  return 1;
+}
 
 
