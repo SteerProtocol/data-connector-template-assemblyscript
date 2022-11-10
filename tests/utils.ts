@@ -23,12 +23,14 @@ export const configForm =
 "period": {
 "type": "integer",
 "title": "Period",
-"description": "Duration in seconds of how far back in time from the current to pull swap data for"
+"description": "Duration in seconds of how far back in time from the current to pull swap data for",
+"detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, you would put the duration of time in seconds (14 * 24 * 60 * 60)"
 },
 "candleWidth": {
 "type": "integer",
 "title": "Candle Width",
-"description": "The size or width of each candle to make from the swap data, measured in seconds"
+"description": "The size or width of each candle to make from the swap data, measured in seconds",
+"detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, this field would be the candle size (day) in seconds (24 * 60 * 60)"
 }
 }
 }`
