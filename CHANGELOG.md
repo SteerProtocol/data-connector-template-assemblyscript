@@ -1,3 +1,10 @@
+### [1.0.1-alpha.1](https://github.com/SteerProtocol/data-connector-template-assemblyscript/compare/v1.0.0...v1.0.1-alpha.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* :art: Formatting, cleanup, tests ([806d410](https://github.com/SteerProtocol/data-connector-template-assemblyscript/commit/806d4108c85cf3b06c614d47b2b5e66b199405a5))
+
 ## 1.0.0 (2022-06-14)
 
 

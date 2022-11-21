@@ -1,5 +1,4 @@
 export const config = `{
-  "epochLength": "86400",
   "poolAddress": "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
   "period": 604800,
   "candleWidth": 300
@@ -7,39 +6,34 @@ export const config = `{
 
 export const configForm = 
 `{
-  "title": "Uniswapv3 Swap To Candle Config",
-  "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
-  "type": "object",
-  "required": [
-    "candleWidth",
-    "poolAddress",
-    "period",
-    "epochLength"
-  ],
-  "properties": {
-    "epochLength": {
-      "type": "integer",
-      "title": "Epoch Length",
-      "description": "Duration in seconds of how often this bundle + strategy should run"
-    },
-    "poolAddress": {
-      "type": "string",
-      "title": "Pool Address",
-      "description": "Address of the pool to pull swaps from"
-    },
-    "period": {
-      "type": "integer",
-      "title": "Period",
-      "description": "Duration in seconds of how far back in time from the current to pull swap data for"
-    },
-    "candleWidth": {
-      "type": "integer",
-      "title": "Candle Width",
-      "description": "The size or width of each candle to make from the swap data, measured in seconds"
-    }
-  }
-}`;
-
+"title": "Uniswapv3 Swap To Candle Config",
+"description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
+"type": "object",
+"required": [
+"candleWidth",
+"poolAddress",
+"period"
+],
+"properties": {
+"poolAddress": {
+"type": "string",
+"title": "Pool Address",
+"description": "Address of the pool to pull swaps from"
+},
+"period": {
+"type": "integer",
+"title": "Period",
+"description": "Duration in seconds of how far back in time from the current to pull swap data for",
+"detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, you would put the duration of time in seconds (14 * 24 * 60 * 60)"
+},
+"candleWidth": {
+"type": "integer",
+"title": "Candle Width",
+"description": "The size or width of each candle to make from the swap data, measured in seconds",
+"detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, this field would be the candle size (day) in seconds (24 * 60 * 60)"
+}
+}
+}`
 export const firstCall = `{
 "method": "post",
 "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
