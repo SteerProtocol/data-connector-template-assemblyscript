@@ -23,6 +23,8 @@ describe("WASM Transformation Module", () => {
       // Check that the result is the same as the expected result
       // Fix some funky encoding
       let hexResult = hexEncode(result) as string;
+      // hexResult = hexResult.replace(/000a/g, '');
+      // hexResult = hexResult.replace(/0002/g, '');
       hexResult = hexResult.replace(/000d/g, '');
       const hexExpected = hexEncode(configForm);
     expect(hexResult).toEqual(hexExpected);
@@ -44,7 +46,7 @@ describe("WASM Transformation Module", () => {
     test("can return first axios config obj", async () => {
       const timestamp = 1654012158
       myModule.initialize(config, timestamp);
-      const result = myModule.main("first");
+      const result = myModule.main("");
       let hexResult = hexEncode(result) as string;
       hexResult = hexResult.replace(/000d/g, '');
       const hexExpected = hexEncode(firstCall);
@@ -69,12 +71,12 @@ describe("WASM Transformation Module", () => {
       expect(result).toBe("true");
     });
 
-    test.only("can run transformation and return candles", async () => {
+    test("can run transformation and return candles", async () => {
       const timestamp = 1653574937
       myModule.initialize(config,timestamp);
       myModule.main(response_swaps);
       const result = myModule.transform();
-      console.log(result)
+      // console.log(result)
       // let hexResult = hexEncode(result) as string;
       // hexResult = hexResult.replace(/000d/g, '');
       // const hexExpected = hexEncode(candles);

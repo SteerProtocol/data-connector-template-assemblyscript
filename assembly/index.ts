@@ -7,7 +7,6 @@ import { JSON } from "assemblyscript-json";
   var startTime: i64;                 // start date
   var candleWidth: i64;
   var data: Array<JSON.Value> = [];   // collector array of swaps
-  const first: string = "first";      // saved to memory for comparison
 
 
   // Initializes variables from the config file
@@ -32,7 +31,7 @@ import { JSON } from "assemblyscript-json";
   // Ref: https://axios-http.com/docs/req_config/
   export function main(response: string): string {
 
-    if (response == first) { // Presumably the first call
+    if (response == '') { // Presumably the first call
       return `{
 "method": "post",
 "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
@@ -176,31 +175,31 @@ import { JSON } from "assemblyscript-json";
   // by the frontend to display input value options and validate user input.
   export function config(): string {
     return `{
-  "title": "Uniswapv3 Swap To Candle Config",
-  "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
-  "type": "object",
-  "required": [
-    "candleWidth",
-    "poolAddress",
-    "period"
-  ],
-  "properties": {
-    "poolAddress": {
-      "type": "string",
-      "title": "Pool Address",
-      "description": "Address of the pool to pull swaps from"
-    },
-    "period": {
-      "type": "integer",
-      "title": "Period",
-      "description": "Duration in seconds of how far back in time from the current to pull swap data for"
-    },
-    "candleWidth": {
-      "type": "integer",
-      "title": "Candle Width",
-      "description": "The size or width of each candle to make from the swap data, measured in seconds"
-    }
-  }
+"title": "Uniswapv3 Swap To Candle Config",
+"description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
+"type": "object",
+"required": [
+"candleWidth",
+"poolAddress",
+"period"
+],
+"properties": {
+"poolAddress": {
+"type": "string",
+"title": "Pool Address",
+"description": "Address of the pool to pull swaps from"
+},
+"period": {
+"type": "integer",
+"title": "Period",
+"description": "Duration in seconds of how far back in time from the current to pull swap data for"
+},
+"candleWidth": {
+"type": "integer",
+"title": "Candle Width",
+"description": "The size or width of each candle to make from the swap data, measured in seconds"
+}
+}
 }`; 
   }
 

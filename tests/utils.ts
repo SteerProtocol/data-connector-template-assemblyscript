@@ -6,33 +6,32 @@ export const config = `{
 
 export const configForm = 
 `{
-    "title": "Uniswapv3 Swap To Candle Config",
-    "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
-    "type": "object",
-    "required": [
-      "candleWidth",
-      "poolAddress",
-      "period"
-    ],
-    "properties": {
-      "poolAddress": {
-        "type": "string",
-        "title": "Pool Address",
-        "description": "Address of the pool to pull swaps from"
-      },
-      "period": {
-        "type": "integer",
-        "title": "Period",
-        "description": "Duration in seconds of how far back in time from the current to pull swap data for"
-      },
-      "candleWidth": {
-        "type": "integer",
-        "title": "Candle Width",
-        "description": "The size or width of each candle to make from the swap data, measured in seconds"
-      }
-    }
-  }`;
-
+"title": "Uniswapv3 Swap To Candle Config",
+"description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
+"type": "object",
+"required": [
+"candleWidth",
+"poolAddress",
+"period"
+],
+"properties": {
+"poolAddress": {
+"type": "string",
+"title": "Pool Address",
+"description": "Address of the pool to pull swaps from"
+},
+"period": {
+"type": "integer",
+"title": "Period",
+"description": "Duration in seconds of how far back in time from the current to pull swap data for"
+},
+"candleWidth": {
+"type": "integer",
+"title": "Candle Width",
+"description": "The size or width of each candle to make from the swap data, measured in seconds"
+}
+}
+}`
 export const firstCall = `{
 "method": "post",
 "url": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
