@@ -56,6 +56,39 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
+				<a href="#steer-protocol-data-connector-template---assemblyscript" id="steer-protocol-data-connector-template---assemblyscript" style="color: inherit; text-decoration: none;">
+					<h1>Steer Protocol Data Connector Template - Assemblyscript</h1>
+				</a>
+				<p>Access off-chain data within <a href="https://steer.finance">Steer Protocol</a> Applications with our AssemblyScript data connector template. Expand your smart contract capabilities with off-chain data! More info can be found here: <a href="https://docs.steer.finance/data-connectors/writing-a-data-connector">Documentation</a></p>
+				<a href="#tip" id="tip" style="color: inherit; text-decoration: none;">
+					<h2>TIP</h2>
+				</a>
+				<p>The Steer Protocol Strategy Template for AssemblyScript can be found here: <a href="https://github.com/SteerProtocol/app-template-assemblyscript">https://github.com/SteerProtocol/app-template-assemblyscript</a></p>
+				<p>Project Structure
+				Data Connectors have 3 functions that will be directly called by the Keeper nodes during runtime. These functions are necessary along with configuration form function, other helper functions and classes will likely be helpful. For more information please see the Data Connector Interface. However, this design means that as a developer you only need to implement the methods which are required for the data connector to work.</p>
+				<p>Below are the significant files and folders which you will want to get familiar with:</p>
+				<pre><code><span style="color: #000000">├── </span><span style="color: #001080">assembly</span><span style="color: #000000">      </span><span style="color: #008000">// Source code for the data connector</span>
+<span style="color: #000000">├── </span><span style="color: #001080">build</span><span style="color: #000000">         </span><span style="color: #008000">// Output of the build process aka `yarn asbuild`</span>
+<span style="color: #000000">├── </span><span style="color: #001080">coverage</span><span style="color: #000000">      </span><span style="color: #008000">// Coverage report for testing</span>
+<span style="color: #000000">├── </span><span style="color: #001080">tests</span><span style="color: #000000">         </span><span style="color: #008000">// Test files with a built in test runner</span>
+<span style="color: #000000">├── </span><span style="color: #001080">asconfig</span><span style="color: #000000">.</span><span style="color: #001080">json</span><span style="color: #000000"> </span><span style="color: #008000">// Assemblyscript config</span>
+<span style="color: #000000">├── </span><span style="color: #001080">index</span><span style="color: #000000">.</span><span style="color: #001080">js</span><span style="color: #000000">      </span><span style="color: #008000">// Javascript entrypoint for the data connector when running tests</span>
+<span style="color: #000000">├── </span><span style="color: #001080">package</span><span style="color: #000000">.</span><span style="color: #001080">json</span><span style="color: #000000">  </span><span style="color: #008000">// Dependencies for the data connector</span>
+</code></pre>
+				<a href="#tip-1" id="tip-1" style="color: inherit; text-decoration: none;">
+					<h2>TIP</h2>
+				</a>
+				<p>The template comes with assemblyscript-json which helps with parsing and encoding.</p>
+				<a href="#project-setup" id="project-setup" style="color: inherit; text-decoration: none;">
+					<h1>Project Setup</h1>
+				</a>
+				<p>Once the template has been cloned, you will need to install the project dependencies. This can be done via the following command:</p>
+				<p>  <code>yarn install</code></p>
+				<a href="#info" id="info" style="color: inherit; text-decoration: none;">
+					<h2>INFO</h2>
+				</a>
+				<p>You will notice that there is a post-install script which will compile the ./assembly source folder and populate the ./build folder. This is done to make it easier to run the tests. We will cover this later.</p>
+				<p>Once you have set up your project, you can begin defining your data connector.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
