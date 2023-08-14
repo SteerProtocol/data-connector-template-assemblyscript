@@ -4,16 +4,14 @@
   "description": "AssemblyScript based strategy template for the Steer Protocol",
   "scripts": {
     "test": "yarn jest",
-    "asbuild:debug": "asc assembly/index.ts --target debug",
-    "asbuild:release": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
-    "start": "npx serve .",
+    "build:debug": "asc assembly/index.ts --target debug",
+    "build:release": "asc assembly/index.ts --target release",
     "docs": "typedoc --tsconfig ./tsconfig.json",
-    "strategy": "yarn asbuild && yarn test",
+    "strategy": "yarn build:debug && yarn test",
     "semantic-release": "semantic-release",
     "commit": "cz",
     "patch-package": "patch-package",
-    "postinstall": "yarn patch-package && yarn asbuild"
+    "postinstall": "yarn patch-package && yarn build:debug && yarn build:release"
   },
   "author": "Derek Barrera <derekbarrera@gmail.com>",
   "contributors": [

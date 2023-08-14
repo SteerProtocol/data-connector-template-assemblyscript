@@ -1,7 +1,7 @@
 import { DataConnectorConfig, ExecutionContext } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
 
-//@serializable
+@serializable
 export class Config extends DataConnectorConfig {
     candleWidth: string = "";
     poolAddress: string = "";
@@ -10,19 +10,19 @@ export class Config extends DataConnectorConfig {
 }
 
 // Swap root object
-//@serializable
+@serializable
 export class Root {
     data: Data = { swaps: [] };
 }
 
 // Swaps data object
-//@serializable
+@serializable
 export class Data {
     swaps: Swap[] = [];
 }
 
 // swap object
-//@serializable
+@serializable
 export class Swap {
     id: string = "";
     timestamp: string = "";
@@ -34,7 +34,7 @@ export class Swap {
 }
 
 // transaction object inside each swap
-//@serializable
+@serializable
 export class Transaction {
     id: string = "";
     blockNumber: string = "";
