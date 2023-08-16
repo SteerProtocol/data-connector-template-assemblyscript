@@ -19,8 +19,7 @@
   "options": {
     "bindings": "esm",
     "transform": [
-      "json-as/transform",
-      "asyncify-shim"
+      "json-as/transform"
     ]
   }
 }

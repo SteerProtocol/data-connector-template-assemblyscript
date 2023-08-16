@@ -25,7 +25,7 @@
     "@steerprotocol/app-loader": "^0.2.0",
     "@steerprotocol/base-strategy": "^0.1.0",
     "@steerprotocol/concentrated-liquidity-strategy": "^0.2.9",
-    "@steerprotocol/data-connector-loader": "^0.1.0",
+    "@steerprotocol/data-connector-loader": "^0.1.2",
     "@steerprotocol/strategy-utils": "^2.2.1",
     "as-bignum": "^0.2.23",
     "as-fetch": "^2.1.4",
@@ -35,7 +35,7 @@
     "commitizen": "^4.2.4",
     "conventional-changelog-conventionalcommits": "^6.1.0",
     "graph-packet-parser": "^0.2.0",
-    "json-as": "^0.5.54",
+    "json-as": "^0.5.59",
     "patch-package": "^8.0.0",
     "typescript": "^5.1.6",
     "visitor-as": "^0.11.4"
@@ -43,8 +43,8 @@
   "devDependencies": {
     "@babel/preset-env": "^7.14.8",
     "@types/jest": "^29.5.3",
-    "@types/node": "^20.4.9",
-    "assemblyscript": "^0.27.8",
+    "@types/node": "^20.5.0",
+    "assemblyscript": "^0.27.9",
     "babel-core": "^6.26.3",
     "babel-jest": "^29.6.2",
     "cz-conventional-changelog": "3.3.0",
