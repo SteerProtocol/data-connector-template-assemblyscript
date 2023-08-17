@@ -2089,9 +2089,9 @@
     "@sigstore/protobuf-specs" "^0.2.0"
 
 "@sigstore/protobuf-specs@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@sigstore/protobuf-specs/-/protobuf-specs-0.2.0.tgz#5801b2a4d10afe1577be6133be6b132b5677c18c"
-  integrity sha512-8ZhZKAVfXjIspDWwm3D3Kvj0ddbJ0HqDZ/pOs5cx88HpT8mVsotFrg7H1UMnXOuDHz6Zykwxn4mxG3QLuN+RUg==
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@sigstore/protobuf-specs/-/protobuf-specs-0.2.1.tgz#be9ef4f3c38052c43bd399d3f792c97ff9e2277b"
+  integrity sha512-XTWVxnWJu+c1oCshMLwnKvz8ZQJJDVOlciMfgpJBQbThVjKTCG8dwyhgLngBD2KN0ap9F/gOV8rFDEx8uh7R2A==
 
 "@sigstore/sign@^1.0.0":
   version "1.0.0"
@@ -2129,20 +2129,13 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@steerprotocol/app-loader@0.2.2", "@steerprotocol/app-loader@^0.2.0":
+"@steerprotocol/app-loader@0.2.2", "@steerprotocol/app-loader@^0.2.0", "@steerprotocol/app-loader@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@steerprotocol/app-loader/-/app-loader-0.2.2.tgz#c19e8c4f31adbfb8dee629ee575778d2d6e76cec"
   integrity sha512-wU522zoJH78CSS051cX7E4m9rdy/4hyfT4QSJLA4jXB6FqtqdgNyJm1fJwq0MRgV1lE3NJJcgdZKRbttOGgzJg==
   dependencies:
     ccxt "^3.0.30"
     timestring "^7.0.0"
-
-"@steerprotocol/app-loader@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@steerprotocol/app-loader/-/app-loader-0.1.6.tgz#4e35c7e2358ce96f565b2ca994ae033ead097049"
-  integrity sha512-517Jar2FZKhLXc8edTrYVWOGSAIEmvHMWVUm0de+ln8KOrYuwhJon0RE/Ad8d4w1bIOtq9UnkpGCeej9i4mCmQ==
-  dependencies:
-    pondjs "1.0.0-alpha.10"
 
 "@steerprotocol/base-strategy@0.1.0", "@steerprotocol/base-strategy@^0.1.0":
   version "0.1.0"
@@ -2159,15 +2152,15 @@
     typescript "^4.3.5"
     visitor-as "^0.11.4"
 
-"@steerprotocol/concentrated-liquidity-strategy@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@steerprotocol/concentrated-liquidity-strategy/-/concentrated-liquidity-strategy-0.2.9.tgz#ec0296bd9716536eeb0af7ed00bb87eb7c2a2917"
-  integrity sha512-509ldcLItzjXBLIwyY52SCpFc+Z3Dks+pS/dsaHeNwjbd6ovGGEk86sthvTEWGQywVuYi6zL4q44tq5SxxbPYg==
+"@steerprotocol/concentrated-liquidity-strategy@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@steerprotocol/concentrated-liquidity-strategy/-/concentrated-liquidity-strategy-1.0.0.tgz#abedfabc592ee09d3bad19b0ba09e87a5fce0649"
+  integrity sha512-DUu6gOHyX4Do+51VpWl0uL7QY4FKR1rkn+vOdAa3VCnAzw80wea7Sy1FI/TreWocnpGFWFEVUsG6xCg0sxYO4g==
   dependencies:
     "@babel/preset-typescript" "^7.14.5"
     "@semantic-release/changelog" "^5.0.1"
     "@semantic-release/git" "^9.0.0"
-    "@steerprotocol/app-loader" "^0.1.6"
+    "@steerprotocol/app-loader" "^0.2.2"
     "@steerprotocol/base-strategy" "0.1.0"
     "@steerprotocol/strategy-utils" "2.1.8"
     as-bignum "^0.2.23"
@@ -2205,7 +2198,7 @@
     typescript "^4.3.5"
     visitor-as "^0.11.4"
 
-"@steerprotocol/strategy-utils@^2.1.0", "@steerprotocol/strategy-utils@^2.2.1":
+"@steerprotocol/strategy-utils@^2.1.0":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@steerprotocol/strategy-utils/-/strategy-utils-2.2.1.tgz#897faed8e2f0bce8b7f5cf1c8173856b3c0f1a78"
   integrity sha512-HIWDv2F7OhI9XqcSNoXMo6Cef0P5b2Ngz4Xy8QlfkrlQEJAOwuQJCxQiU9nEb9afp7Awkostdursz1HYIwexzA==
@@ -2218,6 +2211,24 @@
     commitizen "^4.2.4"
     conventional-changelog-conventionalcommits "^4.6.0"
     json-as "^0.5.20"
+    typescript "^4.3.5"
+    visitor-as "^0.11.4"
+
+"@steerprotocol/strategy-utils@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@steerprotocol/strategy-utils/-/strategy-utils-3.0.0.tgz#807df9160390bce60c0edb1ba17eca227c9fcbc5"
+  integrity sha512-IEDj6KB/tCXstGt39MGqBAy7o6gpD0qnJVTcZC2vlLXsstWE3bD4g0wSeCCiwi73TM66onPcccfTFaIl8a4Ywg==
+  dependencies:
+    "@babel/preset-typescript" "^7.14.5"
+    "@semantic-release/changelog" "^5.0.1"
+    "@semantic-release/git" "^9.0.0"
+    "@steerprotocol/app-loader" "^0.2.2"
+    "@steerprotocol/base-strategy" "0.1.0"
+    as-bignum "^0.2.23"
+    commitizen "^4.2.4"
+    conventional-changelog-conventionalcommits "^4.6.0"
+    json-as "^0.5.43"
+    patch-package "^8.0.0"
     typescript "^4.3.5"
     visitor-as "^0.11.4"
 
@@ -3586,9 +3597,9 @@ eastasianwidth@^0.2.0:
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
 electron-to-chromium@^1.4.477:
-  version "1.4.492"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.492.tgz#83fed8beb64ec60578069e15dddd17b13a77ca56"
-  integrity sha512-36K9b/6skMVwAIEsC7GiQ8I8N3soCALVSHqWHzNDtGemAcI9Xu8hP02cywWM0A794rTHm0b0zHPeLJHtgFVamQ==
+  version "1.4.494"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.494.tgz#588f7a3d19d32a31f3a7e05d81b61d95d25b1555"
+  integrity sha512-KF7wtsFFDu4ws1ZsSOt4pdmO1yWVNWCFtijVYZPUeW4SV7/hy/AESjLn/+qIWgq7mHscNOKAwN5AIM1+YAy+Ww==
 
 elliptic@6.5.4:
   version "6.5.4"
@@ -4352,11 +4363,6 @@ ignore@^5.2.4:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
   integrity sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==
 
-immutable@^4.0.0-rc.12:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.2.tgz#f89d910f8dfb6e15c03b2cae2faaf8c1f66455fe"
-  integrity sha512-oGXzbEDem9OOpDWZu88jGiYCvIsLHMvGw+8OXlpsvTFvIQplQbjg1B1cvKg8f7Hoch6+NGjpPsH1Fr+Mc2D1aA==
-
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -5080,10 +5086,19 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
-json-as@^0.5.20, json-as@^0.5.36, json-as@^0.5.52, json-as@^0.5.59:
+json-as@^0.5.20, json-as@^0.5.36, json-as@^0.5.43, json-as@^0.5.52:
   version "0.5.59"
   resolved "https://registry.yarnpkg.com/json-as/-/json-as-0.5.59.tgz#ff15498d85217594dde58e3d3f3deb0c05b4272b"
   integrity sha512-uKCv7fAV0ZDaMygPVFECbMB40WuQpwN3Tb+W7Pgq6nq8pJms9dbw3NcJ21j5k8/z9WjdCV/wn6DOCHR5/lIseA==
+  dependencies:
+    as-string-sink "^0.5.3"
+    as-variant "^0.4.1"
+    as-virtual "^0.1.9"
+
+json-as@^0.5.61:
+  version "0.5.61"
+  resolved "https://registry.yarnpkg.com/json-as/-/json-as-0.5.61.tgz#d02f887b13f30171824ecc31aeedf7b55912d38a"
+  integrity sha512-lja8gGwovsf3ybZu4JkIkB21rLLr2t6bTiL1RhzHI4sgthyrW7lfAqaM/IudZBQnI1DD7/5adnKWtCD2xAGvLQ==
   dependencies:
     as-string-sink "^0.5.3"
     as-variant "^0.4.1"
@@ -5412,7 +5427,7 @@ lodash.uniqby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.uniqby/-/lodash.uniqby-4.7.0.tgz#d99c07a669e9e6d24e1362dfe266c67616af1302"
   integrity sha512-e/zcLx6CSbmaEgFHCA7BnoQKyCtKMxnuWrJygbwPs/AIn+IMKl66L8/s+wBUn5LRw2pZx3bUHibiV1b6aTWIww==
 
-lodash@4.17.21, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
+lodash@4.17.21, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5746,18 +5761,6 @@ modify-values@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
-
-moment-timezone@^0.5.25:
-  version "0.5.43"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.43.tgz#3dd7f3d0c67f78c23cd1906b9b2137a09b3c4790"
-  integrity sha512-72j3aNyuIsDxdF1i7CEgV2FfxM1r6aaqJyLB2vwb33mXYyoyLly+F1zbWqhA3/bVIoJ4szlUoMbUnVdid32NUQ==
-  dependencies:
-    moment "^2.29.4"
-
-moment@^2.24.0, moment@^2.29.4:
-  version "2.29.4"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
-  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 ms@2.0.0:
   version "2.0.0"
@@ -6408,16 +6411,6 @@ pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
-
-pondjs@1.0.0-alpha.10:
-  version "1.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/pondjs/-/pondjs-1.0.0-alpha.10.tgz#443d80ebd9b5e8bfd32d9efef5285646c19b8672"
-  integrity sha512-ADR2Vf7MAeLXKU2Trq+mL63riqTxoyRaSxrhBN30zAfEEQ7OEFp2KqaAqWJuimsbOiQ1RLHSphjGJDh2x9rC6A==
-  dependencies:
-    immutable "^4.0.0-rc.12"
-    lodash "^4.17.11"
-    moment "^2.24.0"
-    moment-timezone "^0.5.25"
 
 postcss-selector-parser@^6.0.10:
   version "6.0.13"

@@ -1,9 +1,7 @@
 //import { Candle, ExecutionContext, DataConnectorConfig, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
-import { fetch } from "as-fetch/assembly";
+import { fetchSync } from "as-fetch/sync";
 import { Config, Swap } from "./types";
-
-export { responseHandler } from "as-fetch/assembly";
 
 let configObj: Config = new Config();
 
@@ -13,25 +11,26 @@ export function initialize(config: string): void {
 
 export function execute(): void {
   //while (true) {
-    //const swapData: Swap[] = [];
-    const swapText = fetch(configObj.subgraphEndpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: [],
-      body: String.UTF8.encode(
-        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${configObj.executionContext.epochTimestamp - configObj.lookback}, timestamp_lt: ${configObj.executionContext.epochTimestamp}, pool: \\"${configObj.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
-      )
-    }).then(res => {
-      console.log("Response: " + res.text())
-    })
-    //console.log("Response: " + swapText.slice(0, 300) + "...");
-    // We have iterated through all the swaps.
-    // {"data":{"swaps":[]}}
-    //if (swapText.length <= 21) break;
+  //const swapData: Swap[] = [];
+  const res = fetchSync(configObj.subgraphEndpoint, {
+    method: "POST",
+    mode: "no-cors",
+    headers: [
+      ["Content-Type", "application/json"]
+    ],
+    body: String.UTF8.encode(
+      `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${configObj.executionContext.epochTimestamp - configObj.lookback}, timestamp_lt: ${configObj.executionContext.epochTimestamp}, pool: \\"${configObj.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
+    )
+  });
+  console.log("Response: " + res.text());
+  //console.log("Response: " + swapText.slice(0, 300) + "...");
+  // We have iterated through all the swaps.
+  // {"data":{"swaps":[]}}
+  //if (swapText.length <= 21) break;
 
-   /* const swaps = new SwapParser(swapText).parseToSwaps<Swap>();
-    console.log(JSON.stringify(swaps));
-    swapData.concat(swaps);*/
+  /* const swaps = new SwapParser(swapText).parseToSwaps<Swap>();
+   console.log(JSON.stringify(swaps));
+   swapData.concat(swaps);*/
   //}
 }
 
