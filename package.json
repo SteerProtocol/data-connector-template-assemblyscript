@@ -4,7 +4,7 @@
   "description": "AssemblyScript based strategy template for the Steer Protocol",
   "scripts": {
     "test": "yarn jest",
-    "build:debug": "asc assembly/index.ts --target debug --runPasses asyncify  --exportRuntime",
+    "build:debug": "asc assembly/index.ts --target debug --runPasses asyncify --runtime stub --exportRuntime",
     "build:release": "asc assembly/index.ts --target release",
     "docs": "typedoc --tsconfig ./tsconfig.json",
     "strategy": "yarn build:debug && yarn test",
@@ -34,7 +34,7 @@
     "asyncify-shim": "^0.1.0",
     "commitizen": "^4.2.4",
     "conventional-changelog-conventionalcommits": "^6.1.0",
-    "graph-packet-parser": "^0.2.0",
+    "graph-packet-parser": "^0.2.3",
     "json-as": "^0.5.61",
     "patch-package": "^8.0.0",
     "typescript": "^5.1.6",

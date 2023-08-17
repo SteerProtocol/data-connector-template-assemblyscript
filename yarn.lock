@@ -3597,9 +3597,9 @@ eastasianwidth@^0.2.0:
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
 electron-to-chromium@^1.4.477:
-  version "1.4.494"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.494.tgz#588f7a3d19d32a31f3a7e05d81b61d95d25b1555"
-  integrity sha512-KF7wtsFFDu4ws1ZsSOt4pdmO1yWVNWCFtijVYZPUeW4SV7/hy/AESjLn/+qIWgq7mHscNOKAwN5AIM1+YAy+Ww==
+  version "1.4.495"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.495.tgz#d72d2eddc05d07c538275a00f2619b113848bff6"
+  integrity sha512-mwknuemBZnoOCths4GtpU/SDuVMp3uQHKa2UNJT9/aVD6WVRjGpXOxRGX7lm6ILIenTdGXPSTCTDaWos5tEU8Q==
 
 elliptic@6.5.4:
   version "6.5.4"
@@ -4165,10 +4165,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graph-packet-parser@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/graph-packet-parser/-/graph-packet-parser-0.2.0.tgz#5747f808f90ed5cd9cf2bd9ce7160fe0a033901b"
-  integrity sha512-y11VFVwqbhf9t5ThI6wSjTGmhjK2sZ3YJzWZp17Mr+Cme8rWXVqJ+HQ2L8Jy0dApKrxXyexmpgpffzB+PQ7CXA==
+graph-packet-parser@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/graph-packet-parser/-/graph-packet-parser-0.2.3.tgz#49ca5a2b564d5f7ce15777387a36fc7ac4a4bad1"
+  integrity sha512-kzlC2C1NaslPFWsXAvDUZlIziyiqeiVYZTTThsAdOMT09MlmQHEkjcuOIEziwppKZZdL5GylfouFVQluIuCnOw==
 
 handlebars@^4.7.7:
   version "4.7.8"
@@ -5086,16 +5086,7 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
-json-as@^0.5.20, json-as@^0.5.36, json-as@^0.5.43, json-as@^0.5.52:
-  version "0.5.59"
-  resolved "https://registry.yarnpkg.com/json-as/-/json-as-0.5.59.tgz#ff15498d85217594dde58e3d3f3deb0c05b4272b"
-  integrity sha512-uKCv7fAV0ZDaMygPVFECbMB40WuQpwN3Tb+W7Pgq6nq8pJms9dbw3NcJ21j5k8/z9WjdCV/wn6DOCHR5/lIseA==
-  dependencies:
-    as-string-sink "^0.5.3"
-    as-variant "^0.4.1"
-    as-virtual "^0.1.9"
-
-json-as@^0.5.61:
+json-as@^0.5.20, json-as@^0.5.36, json-as@^0.5.43, json-as@^0.5.52, json-as@^0.5.61:
   version "0.5.61"
   resolved "https://registry.yarnpkg.com/json-as/-/json-as-0.5.61.tgz#d02f887b13f30171824ecc31aeedf7b55912d38a"
   integrity sha512-lja8gGwovsf3ybZu4JkIkB21rLLr2t6bTiL1RhzHI4sgthyrW7lfAqaM/IudZBQnI1DD7/5adnKWtCD2xAGvLQ==
