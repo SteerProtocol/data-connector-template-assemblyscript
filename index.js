@@ -11,7 +11,7 @@ loadWasm("./build/debug.wasm", {}).then(mod => {
 }`);
   // Timestamp: 6/1/2023
   console.log("Executing...");
-  mod.execute();
+  console.log(mod.execute("hi im jairus and u are..."));
   console.log("Finished executing");
   console.log("Writing transformed data to STDOUT");
   console.log(mod.transform());

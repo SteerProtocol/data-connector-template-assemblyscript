@@ -1,9 +1,8 @@
-//import { Candle, ExecutionContext, DataConnectorConfig, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
-import { Config, Root, Swap } from "./types";
+import { Config } from "./types";
 
-import { SwapParser } from "graph-packet-parser/src/Swap";
+import { RLP } from "../../rlp";
 
 let configObj: Config = new Config();
 
@@ -18,32 +17,34 @@ export function initialize(config: string): void {
 }
 
 export function execute(): void {
-  while (true) {
-    const swapData: Swap[] = [];
-    const swapText = fetchSync(configObj.subgraphEndpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: [
-        ["Content-Type", "application/json"]
-      ],
-      body: String.UTF8.encode(
-        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj.executionContext.epochTimestamp}, pool: \\"${configObj.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
-      )
-    }).text();
+  fetchSync(configObj.subgraphEndpoint, {
+    method: "POST",
+    mode: "no-cors",
+    headers: [
+      ["Content-Type", "application/json"]
+    ],
+    body: String.UTF8.encode(
+      `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj.executionContext.epochTimestamp}, pool: \\"${configObj.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
+    )
+  });
+  
+  const swapData = fetchSync(configObj.subgraphEndpoint, {
+    method: "POST",
+    mode: "no-cors",
+    headers: [
+      ["Content-Type", "application/json"]
+    ],
+    body: String.UTF8.encode(
+      `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj.executionContext.epochTimestamp}, pool: \\"${configObj.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
+    )
+  });
+  
+  const swapText = swapData.text();
 
-    console.log("Response: " + swapText.slice(0, 300) + "...");
-    // We have iterated through all the swaps.
-    // psuedo: if swapText == {"data":{"swaps":[]}} => swapText = *no-swaps-provided*
-    if (swapText.length <= 21) {
-      console.log("Iterated through all swaps.");
-      break;
-    }
+  console.log("Ptr: " + changetype<usize>(swapData.arrayBuffer()).toString());
 
-    const parsedSwaps = JSON.parse<Root>(swapText);
-    console.log(parsedSwaps.data.swaps[parsedSwaps.data.swaps.length - 1].id);
-    currentTimestamp = i64.parse(parsedSwaps.data.swaps[parsedSwaps.data.swaps.length - 1].timestamp);
-    //console.log("Timestamp: " + currentTimestamp.toString());
-  }
+  console.log("Response: " + swapText);
+  console.log("Iterated through all swaps.");
 }
 
 export function transform(): string {
