@@ -2,8 +2,6 @@ import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
 import { Config } from "./types";
 
-import { RLP } from "../../rlp";
-
 let configObj: Config = new Config();
 
 let currentTimestamp: i64 = 0;
@@ -13,7 +11,7 @@ export function initialize(config: string): void {
   if (configObj.candleWidth == null || configObj.lookback == 0 || configObj.poolAddress == null || configObj.subgraphEndpoint == null) {
     throw new Error("Config not properly formatted");
   }
-  console.log("epochTimestamp: " + configObj.executionContext.epochTimestamp.toString())
+  console.log("epochTimestamp: " + configObj.executionContext.epochTimestamp.toString());
 }
 
 export function execute(): void {
@@ -81,4 +79,8 @@ export function config(): string {
 }
 }
 }`;
+}
+
+export function version(): i32 {
+  return 1;
 }
