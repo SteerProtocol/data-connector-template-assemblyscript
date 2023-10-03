@@ -1,4 +1,4 @@
-import { loadWasm } from "../app-loader";
+import { loadWasm, loadWasmSync } from "../app-loader";
 import {
   DataConnector,
   DataConnectorExecution
