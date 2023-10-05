@@ -1,19 +1,27 @@
 import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
 import { Config } from "./types";
+import { isValidConfig } from "./util";
+
+export { reset } from "./util";
 
 let configObj: Config = new Config();
-
 let currentTimestamp: i64 = 0;
+
+/**
+ * Recieves config from host
+ */
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
   currentTimestamp = configObj.executionContext.epochTimestamp - configObj.lookback;
-  if (configObj.candleWidth == null || configObj.lookback == 0 || configObj.poolAddress == null || configObj.subgraphEndpoint == null) {
+  if (isValidConfig(configObj)) {
     throw new Error("Config not properly formatted");
   }
-  console.log("epochTimestamp: " + configObj.executionContext.epochTimestamp.toString());
 }
 
+/**
+ * Handles the execution logic
+ */
 export function execute(): void {
   fetchSync(configObj.subgraphEndpoint, {
     method: "POST",
@@ -46,12 +54,11 @@ export function execute(): void {
 }
 
 export function transform(): string {
-  __reset();
   return "Ooga Booga";
 }
 
 export function config(): string {
-  return {
+  return `{
     "title": "Uniswapv3 Swap To Candle Config",
     "description": "Input config for converting swap data from a Uniswap v3 pool into OHLC data",
     "type": "object",
@@ -79,7 +86,7 @@ export function config(): string {
         "detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, this field would be the candle size (day) in seconds (24 * 60 * 60)"
       }
     }
-  };
+  }`;
 }
 
 export function version(): i32 {

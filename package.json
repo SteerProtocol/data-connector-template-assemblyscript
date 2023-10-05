@@ -4,7 +4,7 @@
   "description": "AssemblyScript based strategy template for the Steer Protocol",
   "scripts": {
     "test": "yarn jest",
-    "build:debug": "asc assembly/index.ts --target debug --runPasses asyncify --exportRuntime --runtime incremental",
+    "build:debug": "asc assembly/index.ts --target debug --runPasses asyncify --exportRuntime --runtime stub",
     "build:release": "asc assembly/index.ts --target release",
     "docs": "typedoc --tsconfig ./tsconfig.json",
     "strategy": "yarn build:debug && yarn test",
