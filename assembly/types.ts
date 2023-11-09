@@ -1,6 +1,7 @@
 import { DataConnectorConfig, ExecutionContext } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
 
+// Candle/TheGraph Config
 @serializable
 export class Config extends DataConnectorConfig {
     candleWidth: string = "";
@@ -8,6 +9,16 @@ export class Config extends DataConnectorConfig {
     subgraphEndpoint: string = "";
     lookback: i64 = 0;
 }
+
+/*
+// CCXT Config
+@serializable
+export class Config extends DataConnectorConfig {
+  exchangeId: string = "";
+  symbol: string = "";
+  timeframe: string = "";
+  limit: i32 = 0;
+}*/
 
 // Swap root object
 @serializable

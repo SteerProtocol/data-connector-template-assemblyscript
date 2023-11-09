@@ -1,15 +1,10 @@
 {
   "extends": "assemblyscript/std/assembly.json",
   "include": [
-    "assembly/**/*.ts"
+    "./assembly/**/*.ts"
   ],
-  "compilerOptions": {
-    "experimentalDecorators": true
-  },
   "typedocOptions": {
-    "entryPoints": [
-      "assembly/index.ts"
-    ],
+    "entryPoints": ["assembly/index.ts"],
     "out": "docs",
     "excludeExternals": true
   }

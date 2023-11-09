@@ -20,12 +20,28 @@ Below are the significant files and folders which you will want to get familiar 
 ```
 
 ## TIP
-The template comes with assemblyscript-json which helps with parsing and encoding.
+Bindings to [CCXT](https://www.npmjs.com/package/ccxt) and [Asyncify](https://web.dev/articles/asyncify) are built into [@steerprotocol/app-loader](https://npmjs.com/@steerprotocol/app-loader).
 
 # Project Setup
-Once the template has been cloned, you will need to install the project dependencies. This can be done via the following command:
 
-  `yarn install`
+First, you need to clone the repository
+
+```
+git clone https://github.com/SteerProtocol/data-connector-template-assemblyscript
+
+cd data-connector-template-assemblyscript
+```
+
+Install the required dependencies
+
+```
+yarn install
+```
+
+And take it for a test run.
+
+```
+yarn run build:debug && ```
 
 ## INFO
 You will notice that there is a post-install script which will compile the ./assembly source folder and populate the ./build folder. This is done to make it easier to run the tests. We will cover this later.
