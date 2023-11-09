@@ -41,7 +41,8 @@ yarn install
 And take it for a test run.
 
 ```
-yarn run build:debug && ```
+yarn run build:debug && node index.js
+```
 
 ## INFO
 You will notice that there is a post-install script which will compile the ./assembly source folder and populate the ./build folder. This is done to make it easier to run the tests. We will cover this later.
