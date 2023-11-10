@@ -55,7 +55,6 @@ export function transform(): string {
     bills.push(f64.parse(data.at(i++).avg_interest_rate_amt));
   }
   // JSON serialization might be preferred here
-  console.log("Data Length: " + data.length.toString());
   return `{
       "bills": [`+ bills.toString() + `],
       "notes": [`+ notes.toString() + `],
