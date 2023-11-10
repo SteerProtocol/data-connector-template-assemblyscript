@@ -1,4 +1,4 @@
-import { loadWasm } from "../app-loader";
+import { loadWasm } from "@steerprotocol/app-loader";
 
 (async () => {
   const bundle = await loadWasm("./build/debug.wasm", {});
