@@ -77,17 +77,23 @@ export function exampleConfig(): string {
 // by the frontend to display input value options and validate user input.
 export function config(): string {
   return `{
-    "title": "Avg Interest Rates on US Treasury Securities",
-    "description": "returns arrays of interest rates for treasury bills, notes, and bonds",
+    "title": "Average Interest Rates on US Treasury Securities",
+    "description": "Returns arrays of interest rates for treasury bills, notes, and bonds",
     "type": "object",
     "required": [
-      "numMonths"
+      "url",
+      "lookback"
     ],
     "properties": {
       "numMonths": {
         "type": "integer",
-        "title": "Number of Months",
-        "description": "Number of months back from the present to pull data from (<=33)"
+        "title": "Number of months",
+        "description": "Number of months back from the present to pull data from"
+      },
+      "url": {
+        "type": "string",
+        "title": "Url to the US Treasury's Fiscal Data",
+        "description": "URL pointing to the US Treasury's Fiscal Data server"
       }
     }
   }`;
