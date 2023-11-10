@@ -24,7 +24,7 @@ export function execute(): void {
   if (!configObj) throw new Error("Missing config: Must call config() first!");
 
   while (true) {
-    const res = fetchSync(configObj.url, {
+    const res = fetchSync(configObj!.url, {
       method: "GET",
       mode: "no-cors",
       headers: [],
