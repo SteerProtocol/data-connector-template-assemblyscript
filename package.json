@@ -27,7 +27,6 @@
     "@steerprotocol/strategy-utils": "^3.1.1",
     "as-bignum": "^0.3.0",
     "as-fetch": "^2.1.4",
-    "as-json": "^1.0.2",
     "commitizen": "^4.2.4",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "json-as": "^0.5.67",

@@ -1,23 +1,18 @@
 import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
-import { Config, Swap } from "./types";
-import { isValidConfig } from "./util";
-import { SwapParser } from "./parser";
-import { Candle, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly/index";
-
+import { Config, MarketableAsset, ResponseObj } from "./types";
+import { isInvalidConfig } from "./util";
 export { reset } from "./util";
 
 let configObj: Config | null = null;
-let currentTimestamp: i64 = 0;
-const swaps: Swap[] = [];
+let data: MarketableAsset[] = [];
 
 /**
  * Recieves config from host
  */
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
-  currentTimestamp = configObj!.executionContext.epochTimestamp - configObj!.lookback;
-  if (isValidConfig(configObj!)) {
+  if (isInvalidConfig(configObj!)) {
     throw new Error("Config not properly formatted");
   }
 }
@@ -29,50 +24,43 @@ export function execute(): void {
   if (!configObj) throw new Error("Missing config: Must call config() first!");
 
   while (true) {
-    const res = fetchSync(configObj!.subgraphEndpoint, {
-      method: "POST",
+    const res = fetchSync(configObj.url, {
+      method: "GET",
       mode: "no-cors",
-      headers: [
-        ["Content-Type", "application/json"]
-      ],
-      body: String.UTF8.encode(
-        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj!.executionContext.epochTimestamp}, pool: \\"${configObj!.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
-      )
+      headers: [],
+      body: null
     });
 
     const swapText = res.text();
     if (!res.ok) break;
+    if (!swapText.length) break;
 
-    if (swapText.length <= '{"data":{"swaps":[]}}'.length) break;
-
-    new SwapParser(swapText).parseTo<Swap>(swaps);
-    currentTimestamp = i64.parse(swaps[swaps.length - 1].timestamp);
+    data = data.concat(JSON.parse<ResponseObj>(swapText).data);
+    if (data.length >= configObj!.lookback * 3) break;
   }
 }
 
-// Main transform function to be called after main function
+/*
+ * Transform data after execution
+*/
 export function transform(): string {
-  // Utility constant for Uniswap price conversion
-  const X192 = Math.pow(2, 192);
-
-  // this array will be used to generate candles
-  const rawTradeData: Array<RawTradeData> = [];
-
-  // iterate through swaps and create raw trade data
-  for (let i = 0; i < swaps.length; i++) {
-    const swap = swaps[i];
-    const sqrtPriceX96 = f64.parse(swap.sqrtPriceX96)
-    rawTradeData.push(new RawTradeData(i32.parse(swap.timestamp), (sqrtPriceX96 * sqrtPriceX96) / X192, f64.parse(swap.amount0)))
+  const bills: Array<f64> = [];
+  const notes: Array<f64> = [];
+  const bonds: Array<f64> = [];
+  // desired number of objects
+  for (let i = 0; i < (configObj!.lookback * 3) - 3;) {
+    // Fill our arrays
+    bonds.push(f64.parse(data.at(i++).avg_interest_rate_amt));
+    notes.push(f64.parse(data.at(i++).avg_interest_rate_amt));
+    bills.push(f64.parse(data.at(i++).avg_interest_rate_amt));
   }
-
-  // generate candles using @steerprotocol/strategy-utils library
-  const formattedCandles = generateCandles(JSON.stringify<Array<RawTradeData>>(rawTradeData), configObj!.candleWidth);
-
-  // calculate candles data
-  const candles: Array<Candle> = JSON.parse<Array<Candle>>(formattedCandles);
-
-  // craft object to return
-  return JSON.stringify(candles);
+  // JSON serialization might be preferred here
+  console.log("Data Length: " + data.length.toString());
+  return `{
+      "bills": [`+ bills.toString() + `],
+      "notes": [`+ notes.toString() + `],
+      "bonds": [`+ bonds.toString() + `]
+    }`;
 }
 
 // An example of what the config object will look like after being created via the configForm
@@ -89,42 +77,20 @@ export function exampleConfig(): string {
 // by the frontend to display input value options and validate user input.
 export function config(): string {
   return `{
-  "title": "Uniswapv3 Interfacing Candles Config",
-  "description": "Input config for converting swap data from a Uniswap v3 compatable pool into OHLC data",
-  "type": "object",
-  "required": [
-    "candleWidth",
-    "poolAddress",
-    "lookback",
-    "subgraphEndpoint"
-  ],
-  "properties": {
-    "poolAddress": {
-      "type": "string",
-      "title": "Pool Address",
-      "description": "Address of the pool to pull swaps from on the given subgraph",
-      "detailedDescription": "i.e. '0x50eaEDB835021E4A108B7290636d62E9765cc6d7'"
-    },
-    "lookback": {
-      "type": "integer",
-      "title": "Lookback",
-      "description": "Duration in seconds of how far back in time from the current time to pull data (a value of 60 would pull the last 60 seconds of data)",
-      "detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, you would put the duration of time in seconds (14 days * 24 hours in day * 60 minutes in hour * 60 seconds in minute = 1209600)"
-    },
-    "candleWidth": {
-      "type": "string",
-      "title": "Candle Width",
-      "description": "The size or width of each candle in mhdw format (a value of '15m' will make each candle size 15 minutes wide)",
-      "detailedDescription": "Examples: 1m, 5m, 15m, 1h, 1d, 1w"
-    },
-    "subgraphEndpoint" : {
-      "type": "string",
-      "title": "Subgraph Endpoint",
-      "description": "The Graph API endpoint that indexes the desired pool on the desired chain for this data connector",
-      "detailedDescription": "Examples: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'"
+    "title": "Avg Interest Rates on US Treasury Securities",
+    "description": "returns arrays of interest rates for treasury bills, notes, and bonds",
+    "type": "object",
+    "required": [
+      "numMonths"
+    ],
+    "properties": {
+      "numMonths": {
+        "type": "integer",
+        "title": "Number of Months",
+        "description": "Number of months back from the present to pull data from (<=33)"
+      }
     }
-  }
-}`;
+  }`;
 }
 
 export function version(): i32 {

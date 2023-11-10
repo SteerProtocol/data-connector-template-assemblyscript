@@ -1,22 +1,19 @@
-import { loadWasm } from "@steerprotocol/app-loader";
+import { loadWasm } from "../app-loader";
 
 (async () => {
   const bundle = await loadWasm("./build/debug.wasm", {});
   const version = bundle.version();
   console.log("Version: " + version);
-  
-  bundle.initialize(`{
-        "poolAddress": "0x5645dcb64c059aa11212707fbf4e7f984440a8cf",
-        "lookback": 30000,
-        "candleWidth": "30m",
-        "subgraphEndpoint": "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
-        "executionContext": {"epochTimestamp": 1685678400}
-      }`);
+  bundle.initialize(JSON.stringify({
+    url: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?sort=-record_date&filter=security_desc:in:(Treasury%20Bills,Treasury%20Notes,Treasury%20Bonds)",
+    lookback: 12
+  }));
 
   console.log("Executing Bundle...");
   await bundle.execute();
   console.log("Executed Bundle.");
   console.log("Transforming Data...");
   const transformed = await bundle.transform();
-  console.log("Finished Transformation. " + transformed);
+  console.log("Finished Transformation. ");
+  console.log(JSON.parse(transformed));
 })();

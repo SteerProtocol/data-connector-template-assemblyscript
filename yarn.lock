@@ -2596,11 +2596,6 @@ as-fetch@^2.1.4:
   dependencies:
     json-as "^0.5.52"
 
-as-json@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/as-json/-/as-json-1.0.2.tgz#f7fc99e3511da05b9f7b85a29c2baae62dd8fa3d"
-  integrity sha512-qBCKUQd515GglymppNIx9Gd/ka4bdvpg3qbl2DS7biFgc3P5Ed6Dh0PWZyRK/eTIHLO1XqnV9dphdiA5KQtuCw==
-
 as-string-sink@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/as-string-sink/-/as-string-sink-0.5.3.tgz#462392222e01bb4570ee0df685b7f64630fd4f56"

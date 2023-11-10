@@ -3,7 +3,7 @@ import {
   configForm
 } from "./utils";
 import fs from 'fs'
-import { WasmModule, loadWasm } from "@steerprotocol/app-loader";
+import { WasmModule, loadWasm } from "../../app-loader";
 
 jest.setTimeout(60000);
 
