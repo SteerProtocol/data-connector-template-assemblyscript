@@ -5,7 +5,6 @@ import { loadWasm } from "../app-loader";
   const version = bundle.version();
   console.log("Version: " + version);
   bundle.initialize(JSON.stringify({
-    url: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?sort=-record_date&filter=security_desc:in:(Treasury%20Bills,Treasury%20Notes,Treasury%20Bonds)",
     lookback: 12
   }));
 

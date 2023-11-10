@@ -12,6 +12,5 @@ export class ResponseObj {
 
 @serializable
 export class Config {
-  url: string = "";
   lookback: i32 = 0;
 }

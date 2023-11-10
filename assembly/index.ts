@@ -24,7 +24,7 @@ export function execute(): void {
   if (!configObj) throw new Error("Missing config: Must call config() first!");
 
   while (true) {
-    const res = fetchSync(configObj!.url, {
+    const res = fetchSync("https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?sort=-record_date&filter=security_desc:in:(Treasury%20Bills,Treasury%20Notes,Treasury%20Bonds)", {
       method: "GET",
       mode: "no-cors",
       headers: [],
@@ -81,7 +81,6 @@ export function config(): string {
     "description": "Returns arrays of interest rates for treasury bills, notes, and bonds",
     "type": "object",
     "required": [
-      "url",
       "lookback"
     ],
     "properties": {
@@ -89,11 +88,6 @@ export function config(): string {
         "type": "integer",
         "title": "Number of months",
         "description": "Number of months back from the present to pull data from"
-      },
-      "url": {
-        "type": "string",
-        "title": "Url to the US Treasury's Fiscal Data",
-        "description": "URL pointing to the US Treasury's Fiscal Data server"
       }
     }
   }`;
