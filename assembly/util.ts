@@ -14,10 +14,16 @@ export function reset(): void {
 }
 
 /**
- * Validates that a specified configuration is correctly formatted
+ * Checks if a specified configuration is correctly formatted
  * @param config - Config
  * @returns void
- */
-export function isValidConfig(config: Config): boolean {
-    return config.candleWidth == null || config.lookback == 0 || config.poolAddress == null || config.subgraphEndpoint == null;
+ */ 
+export function isInvalidConfig(config: Config): boolean {
+    return (
+       !config.executionContext.epochTimestamp
+    || !config.lookback
+    || !config.subgraphEndpoint
+    || !config.candleWidth
+    || !config.poolAddress
+    )
 }

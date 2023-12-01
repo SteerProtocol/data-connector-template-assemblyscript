@@ -1,7 +1,7 @@
 import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
 import { Config, Swap } from "./types";
-import { isValidConfig } from "./util";
+import { isInvalidConfig } from "./util";
 import { SwapParser } from "./parser";
 import { Candle, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly/index";
 
@@ -17,7 +17,7 @@ const swaps: Swap[] = [];
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
   currentTimestamp = configObj!.executionContext.epochTimestamp - configObj!.lookback;
-  if (isValidConfig(configObj!)) {
+  if (isInvalidConfig(configObj!)) {
     throw new Error("Config not properly formatted");
   }
 }
