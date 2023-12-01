@@ -30,13 +30,13 @@ describe("Data Connector Test Suite", () => {
 
   test("Bundle can execute and fetch data synchronously", async () => {
     bundle.initialize(config);
-    bundle.execute();
+    await bundle.execute();
     expect(true).toBe(true);
   });
 
   test("Bundle can execute and transform data", async () => {
     bundle.initialize(config);
-    bundle.execute();
+    await bundle.execute();
     bundle.transform();
     expect(true).toBe(true);
   });
