@@ -1,3 +1,13 @@
+## [1.2.0](https://github.com/SteerProtocol/data-connector-template-assemblyscript/compare/v1.1.0...v1.2.0) (2024-01-09)
+
+
+### Features
+
+* draft 01 ([d3fc10b](https://github.com/SteerProtocol/data-connector-template-assemblyscript/commit/d3fc10b8f62e70701190de20d52b08f654543b60))
+* initial work ([f18b63d](https://github.com/SteerProtocol/data-connector-template-assemblyscript/commit/f18b63de1502487f192e04dbbd4eaee690684489))
+* mvp stub ([9b4e83f](https://github.com/SteerProtocol/data-connector-template-assemblyscript/commit/9b4e83f2ceb7d8198af7685525508dacb41d960c))
+* RLP import ([33462f6](https://github.com/SteerProtocol/data-connector-template-assemblyscript/commit/33462f6a7ba55747d06ceb0e839e50e74d3695a6))
+
 ## [1.1.0](https://github.com/SteerProtocol/data-connector-template-assemblyscript/compare/v1.0.0...v1.1.0) (2022-11-21)
 
 
