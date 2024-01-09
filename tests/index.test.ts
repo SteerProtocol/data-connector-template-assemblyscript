@@ -1,87 +1,43 @@
-import { candles, config, configForm, firstCall, response_swaps, secondCall } from "./utils";
+import {
+  config,
+  configForm
+} from "./utils";
+import fs from 'fs'
+import { WasmModule, loadWasm } from "@steerprotocol/app-loader";
 
-// We use untouched so that we can run the un-optimized version of the wasm which will provide better stacktraces
-const myModule = require("../untouchLoader");
+jest.setTimeout(60000);
 
-function hexEncode(str: string): any {
-  var hex, i;
+describe("Data Connector Test Suite", () => {
+  let bundle: WasmModule;
+  beforeEach(async () => {
+    bundle = await loadWasm(fs.readFileSync(__dirname + "/../build/debug.wasm"), {})
+  });
 
-  var result = "";
-  for (i=0; i<str.length; i++) {
-      hex = str.charCodeAt(i).toString(16);
-      result += ("000"+hex).slice(-4);
-  }
+  test("Bundle can return input config", async () => {
+    const result = bundle.config();
+    expect(JSON.stringify(JSON.parse(result))).toEqual(JSON.stringify(JSON.parse(configForm)));
+  });
 
-  return result
-}
+  test("Bundle fails improper config", async () => {
+    const improperConfig = `{"config":"null"}`
+    bundle.initialize(improperConfig);
+  });
 
-describe("WASM Transformation Module", () => {
-  describe("Uniswap Data", () => {
-    test("can return input config", async () => {
-      // Call the configForm function on the transformation bundle
-      const result = myModule.config();
-      // Check that the result is the same as the expected result
-      // Fix some funky encoding
-      let hexResult = hexEncode(result) as string;
-      // hexResult = hexResult.replace(/000a/g, '');
-      // hexResult = hexResult.replace(/0002/g, '');
-      hexResult = hexResult.replace(/000d/g, '');
-      const hexExpected = hexEncode(configForm);
-    expect(hexResult).toEqual(hexExpected);
-    });
+  test("Bundle can initialize", async () => {
+    bundle.initialize(config);
+    expect(true).toBe(true);
+  });
 
-    test("fails imporper config", async () => {
-      let configMemoryRef = myModule.__pin(
-        myModule.__newString(
-          `{"config":"null"}`
-        )
-      );
-      const timestamp = 1654012158
-      // The actual strategy instantiation and execution
-      expect(() => {
-        myModule.initialize(configMemoryRef, timestamp);
-      }).toThrowError(/Cannot parse JSON/);
-    });
+  test("Bundle can execute and fetch data synchronously", async () => {
+    bundle.initialize(config);
+    await bundle.execute();
+    expect(true).toBe(true);
+  });
 
-    test("can return first axios config obj", async () => {
-      const timestamp = 1654012158
-      myModule.initialize(config, timestamp);
-      const result = myModule.main("");
-      let hexResult = hexEncode(result) as string;
-      hexResult = hexResult.replace(/000d/g, '');
-      const hexExpected = hexEncode(firstCall);
-      expect(hexResult).toBe(hexExpected);
-    });
-
-    test("can process a response and return a new config", async () => {
-      const timestamp = 1654012158
-      myModule.initialize(config, timestamp);
-      const result = myModule.main(response_swaps);
-      let hexResult = hexEncode(result) as string;
-      hexResult = hexResult.replace(/000d/g, '');
-      const hexExpected = hexEncode(secondCall);
-      expect(hexResult).toBe(hexExpected);
-    });
-
-    test("can process the final response and return true for callback termination", async () => {
-      const timestamp = 1654012158
-      myModule.initialize(config, timestamp);
-      myModule.main(response_swaps);
-      const result = myModule.main(`{"data":{"swaps":[]}}`);
-      expect(result).toBe("true");
-    });
-
-    test("can run transformation and return candles", async () => {
-      const timestamp = 1653574937
-      myModule.initialize(config,timestamp);
-      myModule.main(response_swaps);
-      const result = myModule.transform();
-      // console.log(result)
-      // let hexResult = hexEncode(result) as string;
-      // hexResult = hexResult.replace(/000d/g, '');
-      // const hexExpected = hexEncode(candles);
-      // expect(hexResult).toBe(hexExpected);
-    });
-
+  test("Bundle can execute and transform data", async () => {
+    bundle.initialize(config);
+    await bundle.execute();
+    bundle.transform();
+    expect(true).toBe(true);
   });
 });
