@@ -1,6 +1,7 @@
 import {
   config,
-  configForm
+  configForm,
+  res
 } from "./utils";
 import fs from 'fs'
 import { WasmModule, loadWasm } from "@steerprotocol/app-loader";
@@ -28,16 +29,16 @@ describe("Data Connector Test Suite", () => {
     expect(true).toBe(true);
   });
 
-  test("Bundle can execute and fetch data synchronously", async () => {
+  test("Bundle can execute and fetch data", async () => {
     bundle.initialize(config);
-    await bundle.execute();
+    await bundle.execute(res);
     expect(true).toBe(true);
   });
 
   test("Bundle can execute and transform data", async () => {
     bundle.initialize(config);
-    await bundle.execute();
-    bundle.transform();
+    await bundle.execute(res);
+    await bundle.transform();
     expect(true).toBe(true);
   });
 });

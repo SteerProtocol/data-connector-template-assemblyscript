@@ -1,87 +1,74 @@
 import { JSON } from "json-as/assembly";
-import { fetchSync } from "as-fetch/sync";
-import { Config, Swap } from "./types";
-import { isInvalidConfig } from "./util";
-import { SwapParser } from "./parser";
-import { Candle, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly/index";
 
-export { reset } from "./util";
+// @ts-ignore: Decorator valid here
+@serializable
+class Config {
+  lookback: i32 = 0;
+  isValid(): boolean {
+    if (!this.lookback) return false;
+    return true;
+  }
+}
 
-let configObj: Config | null = null;
-let currentTimestamp: i64 = 0;
-const swaps: Swap[] = [];
+let configObj: Config = new Config();
+let data: MarketableAsset[] = [];
 
 /**
  * Recieves config from host
  */
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
-  currentTimestamp = configObj!.executionContext.epochTimestamp - configObj!.lookback;
-  if (isInvalidConfig(configObj!)) {
-    throw new Error("Config not properly formatted");
-  }
+  if (!configObj.isValid()) throw new Error("Config not properly formatted");
+  if (configObj.lookback > 100) throw new Error("Config lookback cannot exceed 100!");
 }
 
 /**
  * Handles the execution logic
+ * Where:
+ * - If `res` empty, initiate request
+ * - If `res` full, process request
+ * - If return `true` exit loop
  */
-export function execute(): void {
+export function execute(res: string | null): string {
   if (!configObj) throw new Error("Missing config: Must call config() first!");
 
-  while (true) {
-    const res = fetchSync(configObj!.subgraphEndpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: [
-        ["Content-Type", "application/json"]
-      ],
-      body: String.UTF8.encode(
-        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj!.executionContext.epochTimestamp}, pool: \\"${configObj!.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
-      )
-    });
-
-    const swapText = res.text();
-    if (!res.ok) break;
-
-    if (swapText.length <= '{"data":{"swaps":[]}}'.length) break;
-
-    new SwapParser(swapText).parseTo<Swap>(swaps);
-    currentTimestamp = i64.parse(swaps[swaps.length - 1].timestamp);
+  if (!res) {
+    return `{
+        "method": "get",
+        "url": "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?sort=-record_date&filter=security_desc:in:(Treasury Bills,Treasury Notes,Treasury Bonds)",
+        "headers": {}
+        }`
   }
+  data = JSON.parse<ResponseObj>(res).data;
+  return "true";
 }
 
-// Main transform function to be called after main function
+/*
+ * Transform data after execution
+*/
 export function transform(): string {
-  // Utility constant for Uniswap price conversion
-  const X192 = Math.pow(2, 192);
-
-  // this array will be used to generate candles
-  const rawTradeData: Array<RawTradeData> = [];
-
-  // iterate through swaps and create raw trade data
-  for (let i = 0; i < swaps.length; i++) {
-    const swap = swaps[i];
-    const sqrtPriceX96 = f64.parse(swap.sqrtPriceX96)
-    rawTradeData.push(new RawTradeData(i32.parse(swap.timestamp), (sqrtPriceX96 * sqrtPriceX96) / X192, f64.parse(swap.amount0)))
+  const bills: Array<f64> = [];
+  const notes: Array<f64> = [];
+  const bonds: Array<f64> = [];
+  // desired number of objects
+  for (let i = 0; i < data.length - 1; i += 3) {
+    // Fill our arrays
+    bonds.push(f64.parse(data.at(i).avg_interest_rate_amt));
+    notes.push(f64.parse(data.at(i + 1).avg_interest_rate_amt));
+    bills.push(f64.parse(data.at(i + 2).avg_interest_rate_amt));
   }
-
-  // generate candles using @steerprotocol/strategy-utils library
-  const formattedCandles = generateCandles(JSON.stringify<Array<RawTradeData>>(rawTradeData), configObj!.candleWidth);
-
-  // calculate candles data
-  const candles: Array<Candle> = JSON.parse<Array<Candle>>(formattedCandles);
-
-  // craft object to return
-  return JSON.stringify(candles);
+  // JSON serialization might be preferred here
+  return `{
+      "bills": [`+ bills.toString() + `],
+      "notes": [`+ notes.toString() + `],
+      "bonds": [`+ bonds.toString() + `]
+    }`;
 }
 
 // An example of what the config object will look like after being created via the configForm
 export function exampleConfig(): string {
   return `{
-      "poolAddress": "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
-      "lookback": 604800,
-      "candleWidth": "30m",
-      "subgraphEndpoint": "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon"
+      "lookback": 12
     }`;
 }
 
@@ -89,44 +76,34 @@ export function exampleConfig(): string {
 // by the frontend to display input value options and validate user input.
 export function config(): string {
   return `{
-  "title": "Uniswapv3 Interfacing Candles Config",
-  "description": "Input config for converting swap data from a Uniswap v3 compatable pool into OHLC data",
-  "type": "object",
-  "required": [
-    "candleWidth",
-    "poolAddress",
-    "lookback",
-    "subgraphEndpoint"
-  ],
-  "properties": {
-    "poolAddress": {
-      "type": "string",
-      "title": "Pool Address",
-      "description": "Address of the pool to pull swaps from on the given subgraph",
-      "detailedDescription": "i.e. '0x50eaEDB835021E4A108B7290636d62E9765cc6d7'"
-    },
-    "lookback": {
-      "type": "integer",
-      "title": "Lookback",
-      "description": "Duration in seconds of how far back in time from the current time to pull data (a value of 60 would pull the last 60 seconds of data)",
-      "detailedDescription": "For example: If you want to fetch the past 14 days of candles with day candles, you would put the duration of time in seconds (14 days * 24 hours in day * 60 minutes in hour * 60 seconds in minute = 1209600)"
-    },
-    "candleWidth": {
-      "type": "string",
-      "title": "Candle Width",
-      "description": "The size or width of each candle in mhdw format (a value of '15m' will make each candle size 15 minutes wide)",
-      "detailedDescription": "Examples: 1m, 5m, 15m, 1h, 1d, 1w"
-    },
-    "subgraphEndpoint" : {
-      "type": "string",
-      "title": "Subgraph Endpoint",
-      "description": "The Graph API endpoint that indexes the desired pool on the desired chain for this data connector",
-      "detailedDescription": "Examples: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'"
+    "title": "Average Interest Rates on US Treasury Securities",
+    "description": "Returns arrays of interest rates for treasury bills, notes, and bonds",
+    "type": "object",
+    "required": [
+      "lookback"
+    ],
+    "properties": {
+      "numMonths": {
+        "type": "integer",
+        "title": "Number of months",
+        "description": "Number of months back from the present to pull data from"
+      }
     }
-  }
-}`;
+  }`;
 }
 
 export function version(): i32 {
-  return 2;
+  return 1;
+}
+
+// @ts-ignore: Decorator valid here
+@serializable
+class MarketableAsset {
+  avg_interest_rate_amt: string = "";
+}
+
+// @ts-ignore: Decorator valid here
+@serializable
+class ResponseObj {
+  data: Array<MarketableAsset> = [];
 }
