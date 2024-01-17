@@ -18,5 +18,5 @@ import { loadWasm } from "@steerprotocol/app-loader";
   console.log("Executed Bundle.");
   console.log("Transforming Data...");
   const transformed = await bundle.transform();
-  console.log("Finished Transformation. " + transformed);
+  console.log("Finished Transformation. ", JSON.parse(transformed));
 })();

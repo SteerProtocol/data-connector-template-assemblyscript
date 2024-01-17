@@ -1,14 +1,28 @@
 import { JSON } from "json-as/assembly";
 import { fetchSync } from "as-fetch/sync";
-import { Config, Swap } from "./types";
-import { isInvalidConfig } from "./util";
 import { SwapParser } from "./parser";
-import { Candle, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly/index";
+import { ExecutionContext, generateCandles, RawTradeData } from "@steerprotocol/strategy-utils/assembly/index";
 
-export { reset } from "./util";
+// @ts-ignore: Decorator valid here
+@serializable
+class Config {
+  subgraphEndpoint: string = "";
+  poolAddress: string = "";
+  candleWidth: string = "";
+  lookback: u32 = 0;
+  executionContext: ExecutionContext | null = null;
+  isValid(): boolean {
+    if (!this.subgraphEndpoint) return false;
+    if (!this.poolAddress) return false;
+    if (!this.candleWidth) return false;
+    if (!this.lookback) return false;
+    if (!this.executionContext) return false;
+    if (!this.executionContext!.epochTimestamp) return false;
+    return true;
+  }
+}
 
 let configObj: Config | null = null;
-let currentTimestamp: i64 = 0;
 const swaps: Swap[] = [];
 
 /**
@@ -16,10 +30,7 @@ const swaps: Swap[] = [];
  */
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
-  currentTimestamp = configObj!.executionContext.epochTimestamp - configObj!.lookback;
-  if (isInvalidConfig(configObj!)) {
-    throw new Error("Config not properly formatted");
-  }
+  if (!configObj!.isValid()) throw new Error("Config not properly formatted");
 }
 
 /**
@@ -27,6 +38,7 @@ export function initialize(config: string): void {
  */
 export function execute(): void {
   if (!configObj) throw new Error("Missing config: Must call config() first!");
+  let currentTimestamp = <u32>configObj!.executionContext!.epochTimestamp - configObj!.lookback;
 
   while (true) {
     const res = fetchSync(configObj!.subgraphEndpoint, {
@@ -36,7 +48,7 @@ export function execute(): void {
         ["Content-Type", "application/json"]
       ],
       body: String.UTF8.encode(
-        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj!.executionContext.epochTimestamp}, pool: \\"${configObj!.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
+        `{"query":"{ swaps (first: 500, skip: 0, where: {timestamp_gt: ${currentTimestamp}, timestamp_lt: ${configObj!.executionContext!.epochTimestamp}, pool: \\"${configObj!.poolAddress.toLowerCase()}\\"}, orderBy: timestamp, orderDirection: asc){id, timestamp, amount0, amount1, transaction {id, blockNumber}, tick, sqrtPriceX96}}"}`
       )
     });
 
@@ -46,33 +58,25 @@ export function execute(): void {
     if (swapText.length <= '{"data":{"swaps":[]}}'.length) break;
 
     new SwapParser(swapText).parseTo<Swap>(swaps);
-    currentTimestamp = i64.parse(swaps[swaps.length - 1].timestamp);
+    currentTimestamp = u32.parse(swaps[swaps.length - 1].timestamp);
   }
 }
 
 // Main transform function to be called after main function
 export function transform(): string {
-  // Utility constant for Uniswap price conversion
   const X192 = Math.pow(2, 192);
 
-  // this array will be used to generate candles
   const rawTradeData: Array<RawTradeData> = [];
 
-  // iterate through swaps and create raw trade data
   for (let i = 0; i < swaps.length; i++) {
     const swap = swaps[i];
     const sqrtPriceX96 = f64.parse(swap.sqrtPriceX96)
     rawTradeData.push(new RawTradeData(i32.parse(swap.timestamp), (sqrtPriceX96 * sqrtPriceX96) / X192, f64.parse(swap.amount0)))
   }
 
-  // generate candles using @steerprotocol/strategy-utils library
-  const formattedCandles = generateCandles(JSON.stringify<Array<RawTradeData>>(rawTradeData), configObj!.candleWidth);
+  const candles = generateCandles(JSON.stringify<Array<RawTradeData>>(rawTradeData), configObj!.candleWidth);
 
-  // calculate candles data
-  const candles: Array<Candle> = JSON.parse<Array<Candle>>(formattedCandles);
-
-  // craft object to return
-  return JSON.stringify(candles);
+  return candles;
 }
 
 // An example of what the config object will look like after being created via the configForm
@@ -129,4 +133,23 @@ export function config(): string {
 
 export function version(): i32 {
   return 2;
+}
+
+// @ts-ignore: Decorator valid here
+@serializable
+class Swap {
+  id: string = "";
+  timestamp: string = "";
+  amount0: string = "";
+  amount1: string = "";
+  transaction: Transaction = new Transaction();
+  tick: string = "";
+  sqrtPriceX96: string = "";
+}
+
+// @ts-ignore: Decorator valid here
+@serializable
+class Transaction {
+  id: string = "";
+  blockNumber: string = "";
 }
