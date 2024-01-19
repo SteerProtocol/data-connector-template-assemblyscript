@@ -1,6 +1,5 @@
 import { JSON } from "json-as/assembly";
 
-// @ts-ignore: Decorator valid here
 @serializable
 class Config {
   lookback: i32 = 0;
@@ -68,8 +67,8 @@ export function transform(): string {
 // An example of what the config object will look like after being created via the configForm
 export function exampleConfig(): string {
   return `{
-      "lookback": 12
-    }`;
+    "lookback": 12
+  }`;
 }
 
 // Renders the config object in JSON Schema format, which is used
@@ -96,13 +95,11 @@ export function version(): i32 {
   return 1;
 }
 
-// @ts-ignore: Decorator valid here
 @serializable
 class MarketableAsset {
   avg_interest_rate_amt: string = "";
 }
 
-// @ts-ignore: Decorator valid here
 @serializable
 class ResponseObj {
   data: Array<MarketableAsset> = [];
